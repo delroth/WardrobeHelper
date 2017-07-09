@@ -5,6 +5,7 @@ o.EXPS = {'Vanilla', 'Burning Crusade', 'WotLK', 'Cataclysm', 'Mists of Pandaria
 o.PARTY = {'Dungeon', 'Raid'}
 
 c["Ahn'kahet: The Old Kingdom"] = {3, 1, "Ahn'kahet: The Old Kingdom"}
+c["Antorus, the Burning Throne"] = {7, 2, "Antorus, the Burning Throne"}
 c["Assault on Violet Hold"] = {7, 1, "Assault on Violet Hold"}
 c["Auchenai Crypts"] = {2, 1, "Auchenai Crypts"}
 c["Auchindoun"] = {6, 1, "Auchindoun"}
@@ -73,6 +74,7 @@ c["Ruins of Ahn'Qiraj"] = {1, 2, "Ruins of Ahn'Qiraj"}
 c["Scarlet Halls"] = {1, 1, "Scarlet Halls"}
 c["Scarlet Monastery"] = {1, 1, "Scarlet Monastery"}
 c["Scholomance"] = {1, 1, "Scholomance"}
+c["Seat of the Triumvirate"] = {7, 1, "Seat of the Triumvirate"}
 c["Serpentshrine Cavern"] = {2, 2, "Serpentshrine Cavern"}
 c["Sethekk Halls"] = {2, 1, "Sethekk Halls"}
 c["Shado-Pan Monastery"] = {5, 1, "Shado-Pan Monastery"}
