@@ -75,6 +75,17 @@ o.difficulties["25"] = {RAID_DIFFICULTY2, RAID_DIFFICULTY_25PLAYER}
 o.difficulties["10H"] = {RAID_DIFFICULTY3, RAID_DIFFICULTY_10PLAYER_HEROIC}
 o.difficulties["25H"] = {RAID_DIFFICULTY4, RAID_DIFFICULTY_25PLAYER_HEROIC}
 
+-- Instance difficulties from item links. Mostly needed for >= Draenor.
+o.instanceDifficulties = {
+	[1] = PLAYER_DIFFICULTY1,  -- Normal dungeon
+	[2] = PLAYER_DIFFICULTY2,  -- Heroic dungeon
+	[23] = PLAYER_DIFFICULTY6, -- Mythic dungeon
+	[3] = PLAYER_DIFFICULTY1,  -- Normal raid
+	[4] = PLAYER_DIFFICULTY3,  -- LFR raid
+	[5] = PLAYER_DIFFICULTY2,  -- Heroic raid
+	[6] = PLAYER_DIFFICULTY6   -- Mythic raid
+}
+
 ---------------------------------------------------------------
 --  Minimap Button
 ---------------------------------------------------------------
@@ -137,11 +148,36 @@ o.isBlacklisted = function(id)
 	return false
 end
 
+local function newQueue()
+	return {first = 0, last = -1}
+end
+
+local function enqueue(queue, item)
+	local last = queue.last + 1
+	queue.last = last
+	queue[last] = item
+end
+
+local function dequeue(queue)
+	local first = queue.first
+	local value = queue[first]
+	queue[first] = nil
+	queue.first = first + 1
+    return value
+end
+
+local function queueIsEmpty(queue)
+	return queue.first > queue.last
+end
+
 local function getUpdateHelper()
 	return coroutine.create(function()
 		local newInstances = {}
-		local blockSize = 50 -- number of appearances to load at once. higher values may introduce lag
+		local sourcesQueue = newQueue()
+		local enqueueBlockSize = 1000 -- number of sources to queue at once.
+		local scanBlockSize = 50 -- number of sources to attempt to load at once.
 		local counter = 0
+		
 		for i = 1,30 do
 			local appearances = C_TransmogCollection.GetCategoryAppearances(i)
 			if appearances then
@@ -149,86 +185,108 @@ local function getUpdateHelper()
 					local sources = C_TransmogCollection.GetAppearanceSources(appearances[j].visualID)
 					if sources then
 						local collected = (WrdHlpSave.completionistMode == false) and (o.isCollected(sources) == true)
-						if collected and WrdHlpSave.disableProgress then
-						else
+						if not (collected and WrdHlpSave.disableProgress) then
 							for m = 1,#sources do
-								local i1, i2, b1, i3, b2, itemString, visualString, sourceType = C_TransmogCollection.GetAppearanceSourceInfo(sources[m].sourceID)
-								local itemID = tonumber(string.match(itemString, 'item:([^:]*):'))
-								collected = (WrdHlpSave.completionistMode == false) and (o.isCollected(sources) == true)
-								collected = collected or (WrdHlpSave.completionistMode and o.isCollected(sources, itemID))
-								if o.isBlacklisted(itemID) == false then
-									-- 1 = Boss Raid Drops
-									if sourceType == 1 then
-										local drops = C_TransmogCollection.GetAppearanceSourceDrops(sources[m].sourceID)
-										for k=1,#drops do
-											local inst = drops[k]
-											if newInstances[inst.instance] == nil then
-												newInstances[inst.instance] = {}
-												newInstances[inst.instance]['collected'] = 0
-												newInstances[inst.instance]['total'] = 0
-												newInstances[inst.instance]['difficulties'] = {}
-											end
-											if #inst.difficulties == 0 then
-												inst.difficulties[1] = "Normal"
-											end
-											for l=1,#inst.difficulties do
-												local dif = inst.difficulties[l]
-												if newInstances[inst.instance]['difficulties'][dif] == nil then
-													newInstances[inst.instance]['difficulties'][dif] = {}
-													newInstances[inst.instance]['difficulties'][dif]['collected'] = 0
-													newInstances[inst.instance]['difficulties'][dif]['total'] = 0
-													newInstances[inst.instance]['difficulties'][dif]['bosses'] = {}
-												end
-												if newInstances[inst.instance]['difficulties'][dif]['bosses'][inst.encounter] == nil then
-													newInstances[inst.instance]['difficulties'][dif]['bosses'][inst.encounter] = {}
-													newInstances[inst.instance]['difficulties'][dif]['bosses'][inst.encounter]['items'] = {}
-												end
-												if collected then
-													newInstances[inst.instance]['collected'] = newInstances[inst.instance]['collected'] + 1
-													newInstances[inst.instance]['difficulties'][dif]['collected'] = newInstances[inst.instance]['difficulties'][dif]['collected'] + 1
-												else
-													table.insert(newInstances[inst.instance]['difficulties'][dif]['bosses'][inst.encounter]['items'], {
-														link = itemString, id = itemID, visualID = appearances[j].visualID,	sourceID = sources[m].sourceID
-													})
-												end
-												newInstances[inst.instance]['total'] = newInstances[inst.instance]['total'] + 1
-												newInstances[inst.instance]['difficulties'][dif]['total'] = newInstances[inst.instance]['difficulties'][dif]['total'] + 1
-											end
-										end
-									else
-										local type = TYPES[sourceType]
-										if newInstances[type] == nil then
-											newInstances[type] = {}
-											newInstances[type]['difficulties'] = {}
-											newInstances[type]['difficulties']['Normal'] = {}
-											newInstances[type]['difficulties']['Normal']['bosses'] = {}
-											newInstances[type]['collected'] = 0
-											newInstances[type]['total'] = 0
-										end
-										if newInstances[type]['difficulties']['Normal']['bosses'][i] == nil then
-											newInstances[type]['difficulties']['Normal']['bosses'][i] = {}
-											newInstances[type]['difficulties']['Normal']['bosses'][i]['items'] = {}
-										end
-										if collected then
-											newInstances[type]['collected'] = newInstances[type]['collected'] + 1
-										else
-											table.insert(newInstances[type]['difficulties']['Normal']['bosses'][i]['items'], {
-												link = itemString, id = itemID, visualID = appearances[j].visualID, sourceID = sources[m].sourceID
-											})
-										end
-										newInstances[type]['total'] = newInstances[type]['total'] + 1
-									end
+								enqueue(sourcesQueue, {category = i, sources = sources, visualID = appearances[j].visualID, sourceID = sources[m].sourceID, retryCount = 0})
+								counter = counter + 1
+								if counter % enqueueBlockSize == 0 then
+									o.dotsString = o.dotsString .. "."
+									if o.dotsString == "...." then o.dotsString = "" end
+									coroutine.yield()
 								end
 							end
 						end
 					end
-					counter = counter + 1
-					if counter % blockSize == 0 then
-						o.dotsString = o.dotsString .. "."
-						if o.dotsString == "...." then o.dotsString = "" end
-						coroutine.yield()
+				end
+			end
+		end
+		
+		counter = 0
+		while not queueIsEmpty(sourcesQueue) do
+			local sourceToScan = dequeue(sourcesQueue)
+			local i1, i2, b1, i3, b2, itemString, visualString, sourceType = C_TransmogCollection.GetAppearanceSourceInfo(sourceToScan.sourceID)
+			if visualString == nil or visualString == '' then
+				-- "Retrieving item information". Retry later.
+				sourceToScan.retryCount = sourceToScan.retryCount + 1
+				enqueue(sourcesQueue, sourceToScan)
+			else
+				local itemID = tonumber(string.match(itemString, 'item:([^:]*):'))
+				local itemDifficulty = tonumber(string.match(itemString, 'item:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:([^:]*):'))
+				collected = (WrdHlpSave.completionistMode == false) and (o.isCollected(sourceToScan.sources) == true)
+				collected = collected or (WrdHlpSave.completionistMode and o.isCollected(sourceToScan, itemID))
+				if o.isBlacklisted(itemID) == false then
+					-- 1 = Boss Raid Drops
+					if sourceType == 1 then
+						local drops = C_TransmogCollection.GetAppearanceSourceDrops(sourceToScan.sourceID)
+						for k=1,#drops do
+							local inst = drops[k]
+							if newInstances[inst.instance] == nil then
+								newInstances[inst.instance] = {}
+								newInstances[inst.instance]['collected'] = 0
+								newInstances[inst.instance]['total'] = 0
+								newInstances[inst.instance]['difficulties'] = {}
+							end
+							if #inst.difficulties == 0 then
+								if itemDifficulty == nil or o.instanceDifficulties[itemDifficulty] == nil then
+									inst.difficulties[1] = "Normal"
+								else
+									inst.difficulties[1] = o.instanceDifficulties[itemDifficulty]
+								end
+							end
+							for l=1,#inst.difficulties do
+								local dif = inst.difficulties[l]
+								if newInstances[inst.instance]['difficulties'][dif] == nil then
+									newInstances[inst.instance]['difficulties'][dif] = {}
+									newInstances[inst.instance]['difficulties'][dif]['collected'] = 0
+									newInstances[inst.instance]['difficulties'][dif]['total'] = 0
+									newInstances[inst.instance]['difficulties'][dif]['bosses'] = {}
+								end
+								if newInstances[inst.instance]['difficulties'][dif]['bosses'][inst.encounter] == nil then
+									newInstances[inst.instance]['difficulties'][dif]['bosses'][inst.encounter] = {}
+									newInstances[inst.instance]['difficulties'][dif]['bosses'][inst.encounter]['items'] = {}
+								end
+								if collected then
+									newInstances[inst.instance]['collected'] = newInstances[inst.instance]['collected'] + 1
+									newInstances[inst.instance]['difficulties'][dif]['collected'] = newInstances[inst.instance]['difficulties'][dif]['collected'] + 1
+								else
+									table.insert(newInstances[inst.instance]['difficulties'][dif]['bosses'][inst.encounter]['items'], {
+										link = itemString, id = itemID, visualID = sourceToScan.visualID, sourceID = sourceToScan.sourceID
+									})
+								end
+								newInstances[inst.instance]['total'] = newInstances[inst.instance]['total'] + 1
+								newInstances[inst.instance]['difficulties'][dif]['total'] = newInstances[inst.instance]['difficulties'][dif]['total'] + 1
+							end
+						end
+					else
+						local type = TYPES[sourceType]
+						if newInstances[type] == nil then
+							newInstances[type] = {}
+							newInstances[type]['difficulties'] = {}
+							newInstances[type]['difficulties']['Normal'] = {}
+							newInstances[type]['difficulties']['Normal']['bosses'] = {}
+							newInstances[type]['collected'] = 0
+							newInstances[type]['total'] = 0
+						end
+						if newInstances[type]['difficulties']['Normal']['bosses'][sourceToScan.category] == nil then
+							newInstances[type]['difficulties']['Normal']['bosses'][sourceToScan.category] = {}
+							newInstances[type]['difficulties']['Normal']['bosses'][sourceToScan.category]['items'] = {}
+						end
+						if collected then
+							newInstances[type]['collected'] = newInstances[type]['collected'] + 1
+						else
+							table.insert(newInstances[type]['difficulties']['Normal']['bosses'][sourceToScan.category]['items'], {
+								link = itemString, id = itemID, visualID = sourceToScan.visualID, sourceID = sourceToScan.sourceID
+							})
+						end
+						newInstances[type]['total'] = newInstances[type]['total'] + 1
 					end
 				end
+			end
+			counter = counter + 1
+			if counter % scanBlockSize == 0 then
+				o.dotsString = o.dotsString .. "."
+				if o.dotsString == "...." then o.dotsString = "" end
+				coroutine.yield()
 			end
 		end
 
@@ -300,7 +358,7 @@ local function getUpdateHelper()
 							end
 
 							counter = counter + 1
-							if counter % blockSize == 0 then
+							if counter % scanBlockSize == 0 then
 								o.dotsString = o.dotsString .. "."
 								if o.dotsString == "...." then o.dotsString = "" end
 								coroutine.yield()
