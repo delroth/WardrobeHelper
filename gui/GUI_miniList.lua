@@ -87,14 +87,14 @@ local function CreateTableRow(parent, rowHeight, N)
   row:SetPoint("RIGHT", parent, "RIGHT", -16, 0)
 
   row:SetScript("OnClick", function(self, button)
-    local name, itemLink = GetItemInfo(self.id)
+    local name = GetItemInfo(self.itemLink)
     if (itemLink and button == "LeftButton" and IsModifiedClick("CHATLINK")) then
-      ChatEdit_InsertLink(itemLink)
+      ChatEdit_InsertLink(self.itemLink)
       return
     end
 
     if(itemLink and button == "LeftButton" and IsModifiedClick("DRESSUP") and DressUpFrame) then
-      DressUpItemLink(itemLink)
+      DressUpItemLink(self.itemLink)
       return
     end
 
@@ -112,15 +112,15 @@ local function CreateTableRow(parent, rowHeight, N)
       o.refreshInstance(o.selection.miniList.instance)
       o.setDifficulty(o.selection.miniList.difficulty)
       o.GUIopenMiniList(nil, nil, nil, true)
-      print(string.format(o.strings["Item added to blacklist"], itemLink .. "|cFFFF7D0A"))
+      print(string.format(o.strings["Item added to blacklist"], self.itemLink .. "|cFFFF7D0A"))
     end
   end)
 
 	row:SetScript("OnEnter", function()
-      if(row.id) then
+      if(row.itemLink) then
         GameTooltip_SetDefaultAnchor(GameTooltip, row)
   			GameTooltip:ClearLines()
-				GameTooltip:SetItemByID(row.id);
+				GameTooltip:SetHyperlink(row.itemLink);
   			GameTooltip:ClearAllPoints()
   			GameTooltip:SetPoint("BOTTOMRIGHT", row, "TOPLEFT")
   			GameTooltip:Show();
@@ -227,8 +227,8 @@ o.GUIopenMiniList = function(N, instance, difficulty, dontAffectVisibility)
       if #v['items'] > 0 then
         table.insert(f.menuItems, {name = k, category = true})
         for i = 1,#v['items'] do
-    			local n, itemLink = GetItemInfo(v['items'][i].id)
-          table.insert(f.menuItems, {name = n, id = v['items'][i].id, link = itemLink})
+    			local n = GetItemInfo(v['items'][i].link)
+          table.insert(f.menuItems, {name = n, id = v['items'][i].id, link = v['items'][i].link})
         end
         table.insert(f.menuItems, {name = "", category = true})
       end
