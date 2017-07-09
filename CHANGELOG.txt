@@ -1,0 +1,270 @@
+== 1.17 ==
+ * replaced favorite instances stars with 8 possible raid markings (huge thanks to HgD)
+
+﻿== 1.16.3 ==
+ * bumped TOC to 7.1
+ * categorized "Return to Karazhan" and "Trial of Valor"
+
+== 1.16.2 ==
+ * added custom category for Season 1 (thanks to Urtgard)
+ * fixed some instances in German
+
+== 1.16.1 ==
+ * updated Chinese localization
+ * removed Legion Invasion data
+ * fixed Completionist mode for custom categories
+
+== 1.16 ==
+ * fixed Stockade for "Current Instance"
+ * support for adding custom data to already existing categories (eg. Trash drops, Shared loot, ...)
+
+== 1.15.3 ==
+ * fixed some instances in Russian
+ * //code change// - added identifiers for instances for future use
+
+== 1.15.2 ==
+ * added progress to category titles
+ * changed tooltip anchoring in MiniList
+ * fixed The Eye in Russian language
+
+== 1.15.1 ==
+ * fixed issue that wrongly marked some items as collected (mostly in completionist mode)
+
+== 1.15 ==
+ * added option to Star instances to find them easier (Shift right click)
+ * added information tooltips for controls
+ * changed options button to cogwheel button
+ * lowered minimal row count for MiniList
+
+== 1.14.1 ==
+ * added option to auto-refresh items on game start
+ * Current Instance button now opens MiniList when only MiniList option is enabled
+ * items in MiniList are now clickable and have the same functionality as items in Item Frame
+ ** use the top of MiniList (progress bar) to reposition the frame
+ * MiniList is now resizable
+ ** You can change the scale and row count in options
+ * MiniList changes to current instance on entering an instance if open
+ * added information to chat when blacklisting items
+
+== 1.14 ==
+ * added support for global blacklist
+ ** blacklisted Rugged Spaulders
+ * added personal blacklist (alt-click an item to blacklist)
+ ** remove from blacklist in options
+ ** blacklisting in custom categories is not supported yet
+
+== 1.13.9 ==
+ * added custom category for Legion Invasion
+ * fixed ICC for German
+
+== 1.13.8 ==
+ * fixes for German dungeon list (thanks to biatos)
+ * added option to show MiniList directly instead of Item Frame
+ * more code cleanup
+
+== 1.13.7 ==
+ * fixed German categorization (thanks to biatos)
+
+== 1.13.6 ==
+ * fixed instance refreshing
+ * added French locale (thanks to BLT_Malcorne)
+
+== 1.13.5 ==
+ * added option to hide completed instances
+ * fixed bug with custom categories progress showing wrong numbers after 2nd refresh
+ * first attempt to cleanup code (sigh)
+
+== 1.13.4 ==
+ * Fixed errors in cn categorization files (thanks to coodrag)
+ * Added traditional Chinese (zhTW) localization (thanks to gaspy10)
+
+== 1.13.3 ==
+ * Chinese files converted to UTF-8 (thanks to xiewulong)
+
+== 1.13.2 ==
+ * added close button to main item list frame
+ * added more custom categories:
+ ** Tier 16
+ ** Tier 17
+ ** Tier 18
+
+== 1.13.1 ==
+ * added more custom categories:
+ ** Tier 14
+ ** Tier 15
+
+== 1.13 ==
+ * added MiniList to track progress of instance
+ * fixed issue with boss names overlapping
+ * added simplified Chinese support (thanks to tgrtheone)
+ * added more custom categories:
+ ** Tier 9
+ ** Tier 10
+ ** Tier 11
+ ** Tier 12
+ ** Tier 13
+
+== 1.12.2 ==
+ * added Spanish support (thanks to Grugan18)
+ * added more custom categories:
+ ** Tier 7
+ ** Tier 8
+
+== 1.12.1 ==
+ * fixed Refresh current instance
+
+== 1.12 ==
+ * added Completionist mode (can be turned on in Options)
+ * added Spanish support for instance list (thanks to Grugan18)
+ * added tooltip that shows progress by difficulty for instances with multiple difficulties
+
+== 1.11.1 ==
+ * updated German translation (thanks to Tumbleweed_DSA)
+ ** the buttons don't scale properly for the text size for now
+ * added more custom categories:
+ ** Tier 4
+ ** Tier 5
+ ** Tier 6
+
+== 1.11 ==
+ * added support for Custom Categories
+ ** for now:
+ *** Tier 1
+ *** Tier 2
+ *** Tier 3
+
+== 1.10.3 ==
+ * added Portuguese to TOC (sigh)
+
+== 1.10.2 ==
+ * added Portuguese support (thanks to Ba_dashi)
+ * added option to disable refresh confirmation
+ * fix for "Violet Hold" for "Show current instance"
+
+== 1.10.1 ==
+ * added minimap button (and the option to disable it)
+ * added titan panel support
+
+== 1.10 ==
+ * the UI should be more responsive during refresh (thanks to yksisarvinen)
+ * Sunwell fix
+ * spelling fix
+
+== 1.9.2 ==
+ * added Russian support (thanks to tomikus)
+
+== 1.9.1 ==
+ * added German support for dungeon list (thanks to Huschiro)
+ * instance list was changed to scrollable instead of paging
+ * fixed Defaults button in Options
+
+== 1.9 ==
+ * optimizations
+ * fixed SOME issues with Refresh Instance
+ * fix for "Sunken Temple" for "Show current instance"
+ * added options window
+ ** option to disable progress for faster refresh
+ ** option to hide list of instances when opening instance
+
+== 1.8.3 ==
+ * added French support for dungeon list (thanks to Cofibib)
+ * added support for future localization
+ * fixed bug with weirdly displayed bars in dungeon list
+
+== 1.8.2 ==
+ * scrolling in Item Frame is much less annoying
+
+== 1.8.1 ==
+ * hotfix for lua errors
+
+== 1.8 ==
+ * added confirmation to refresh all items
+ * added indicator for currently saved instances
+ * added more reasonable progress indicator
+ * instances with completed transmogs are now shown and marked
+ * fix for "Temple of Ahn'Qiraj" for "Show current instance"
+ * added information about the need to initially load instances
+
+== 1.7 ==
+  * instances are categorized to expansions and raid/dungeon categories (EN only)
+  * fix for 'The Eye' for "Show current instance"
+
+== 1.6 ==
+ * even more dungeon fixes for 'current dungeon'
+ * first ugly implementation of items with no ingame source information (World drop / Vendor / Quest / ...)
+
+== 1.5.3 ==
+ * fix conflicting with WIM
+
+== 1.5.2 ==
+ * Magisters' Terrace fixed (Magister's isn't Magisters' Blizzard)
+
+== 1.5.1 ==
+ * lua errors
+
+== 1.5 ==
+ * added option to close list without closing instance
+ * hopefully less lua errors
+ * boss names should disappear when they don't drop anything anymore
+ * instances with prefixes might be finally working with "Show current instance" (Why can't Blizzard be consistent :c)
+
+== 1.4 ==
+ * moved button in Wardrobe for now
+ * added button to open currently entered instance
+ * auto-opens with currently entered instance
+
+== 1.3 ==
+ * fixed minor issue with instance list
+ * added shift click on items to post in chat
+ * added ctrl click on items to show in dressup frame
+
+== 1.2 ==
+ * added refresh only selected instance button
+ * added button to wardrobe to open
+ * tooltips are less annoying
+
+== 1.1 ==
+ * added count of missing items
+ * improved main frame
+ * new interface for items
+ * added scrollwheel support
+
+== 1.0 ==
+ * initial release
+
+== TODO ==
+ * add illusions
+ * sort bosses by real order
+ * remove duplicate items
+ * open with difficulty currently set by the player ingame
+ * sort instances by missing stuff
+ * show counts of missing mogs for other classes too
+ * add background picture for expansions/difficulties
+
+ * remove duplicate difficulties
+ * save data to avoid full refresh after relog
+ * auto-refresh instance when appropriate
+ * show message in chat if you get new transmog
+ * items that can be unlocked but aren't meant for the class aren't shown (DK offhand)
+ * Create a filter, to show only raids, only dungeons, specifics expansions, etc.
+ * create progress bar in default objective tracker for current zone
+ * clickable boss names that take you to dungeon journal
+
+ * option to show completed items and instances (marked specially)
+ * show locations for dungeons
+ * add data to boss tooltip
+ * command for current instance
+ * better broker support (progress for current zone, mouseover with item list)
+ * add tier tokens to bosses
+ * hide killed bosses
+
+== BUGS ==
+ * Baradin Hold is bugged, VoA is bugged
+ * Many staves are missing
+    https://wow.curseforge.com/addons/monars-wardrobehelper/tickets/18-addon-does-not-detect-missing-two-hand-staves/
+ * fix HC/Mythic/.. items - not even refresh instance works because of that
+ * invasions are bugged (show loot you can't unlock and can't be refreshed)
+
+ * This raid is missing   Dump: value=GetInstanceInfo() [1]="Gruul's Lair", [2]="raid", [3]=4, [4]="25 Player", [5]=25, [6]=0, [7]=false, [8]=565, [9]=25 Also do not see this one, but im not sure if they get totally removed from the list if you have all items? Its a little raid instance so might have all items, so if they get removed then you should be told i think when entering the,   [1]="Magtheridon's Lair", [2]="raid", [3]=4, [4]="25 Player", [5]=25, [6]=0, [7]=false, [8]=544, [9]=25
+
+ * 4 raids are not marked as under currently saved in french. I think the problem is the translation is not exactly the good one : "Caverne du sanctuaire du Serpent" ->  "Glissecroc : caverne du sanctuaire du Serpent" "Le Temple noir" ->  "Temple noir" "L'Œil" -> "Donjon de la Tempête" "Plateau du Puits de soleil" -> "Le Puits de soleil"

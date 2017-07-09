@@ -1,0 +1,67 @@
+## Interface:  70100
+## Title: mOnAr's WardrobeHelper
+## Version: 1.17
+## Author: Seamoon/mOnAr
+## Notes:
+## SavedVariables: mOnWDSave
+## SavedVariablesPerCharacter:
+
+libs\LibDBIcon-1.0\embeds.xml
+libs\LibDBIcon-1.0\LibDBIcon-1.0\lib.xml
+
+_GlobalOptions.lua
+Functions.lua
+
+Init.lua
+
+localization\Categorization.en.lua
+localization\Categorization.fr.lua
+localization\Categorization.de.lua
+localization\Categorization.ru.lua
+localization\Categorization.pt.lua
+localization\Categorization.es.lua
+localization\Categorization.cn.lua
+localization\Categorization.tw.lua
+
+localization\Localization.en.lua
+localization\Localization.ru.lua
+localization\Localization.pt.lua
+localization\Localization.de.lua
+localization\Localization.es.lua
+localization\Localization.cn.lua
+localization\Localization.tw.lua
+localization\Localization.fr.lua
+
+customCategories\Tier1.lua
+customCategories\Tier2.lua
+customCategories\Tier3.lua
+customCategories\Tier4.lua
+customCategories\Tier5.lua
+customCategories\Tier6.lua
+customCategories\Tier7.lua
+customCategories\Tier8.lua
+customCategories\Tier9.lua
+customCategories\Tier10.lua
+customCategories\Tier11.lua
+customCategories\Tier12.lua
+customCategories\Tier13.lua
+customCategories\Tier14.lua
+customCategories\Tier15.lua
+customCategories\Tier16.lua
+customCategories\Tier17.lua
+customCategories\Tier18.lua
+customCategories\Season1.lua
+
+additionalInstanceData\additionalData.lua
+
+Blacklist.lua
+
+Core.lua
+additionalDataHandler.lua
+
+gui\GUI_main.lua
+gui\GUI_items.lua
+gui\GUI_options.lua
+gui\GUI_miniList.lua
+
+_InterfaceOptions.lua
