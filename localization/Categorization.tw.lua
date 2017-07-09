@@ -1,6 +1,6 @@
 if GetLocale() ~= "zhTW" then return end
 
-local o = mOnWardrobe
+local o = WardrobeHelper
 local c = {}
 o.categorization = c
 o.EXPS = {'舊世界', '燃燒的遠征', '巫妖王之怒', '浩劫與重生', '潘達利亞之謎', '德拉諾之霸', '軍臨天下'}

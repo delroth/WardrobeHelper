@@ -1,4 +1,4 @@
-local o = mOnWardrobe
+local o = WardrobeHelper
 if o.additionalData == nil then o.additionalData = {} end
 local a = o.additionalData
 

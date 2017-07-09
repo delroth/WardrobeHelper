@@ -1,3 +1,7 @@
+== 1.18 ==
+ * Forked from mOnArs_WardrobeHelper by delroth to try and improve a few things.
+ * bumped TOC to 7.2
+
 == 1.17 ==
  * replaced favorite instances stars with 8 possible raid markings (huge thanks to HgD)
 

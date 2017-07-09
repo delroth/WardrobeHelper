@@ -1,20 +1,20 @@
-local o = mOnWardrobe
+local o = WardrobeHelper
 
 ---------------------------------------------------------------
 --  Methods
 ---------------------------------------------------------------
 
 local function createMenuItems()
-	local ff = mOnWD_OptionsFrame.blacklist
+	local ff = WrdHlp_OptionsFrame.blacklist
 	ff.menuItems = {}
-	for i = 1,#mOnWDSave.blacklist do
-		local n, itemLink = GetItemInfo(mOnWDSave.blacklist[i])
-		table.insert(ff.menuItems, {name = n, id = mOnWDSave.blacklist[i], link = itemLink})
+	for i = 1,#WrdHlpSave.blacklist do
+		local n, itemLink = GetItemInfo(WrdHlpSave.blacklist[i])
+		table.insert(ff.menuItems, {name = n, id = WrdHlpSave.blacklist[i], link = itemLink})
 	end
 end
 
 o.GUIblacklistPage = function(N)
-  local ff = mOnWD_OptionsFrame.blacklist
+  local ff = WrdHlp_OptionsFrame.blacklist
 	if ff.menuItems == nil then ff.menuItems = {} end
 	ff.N = N
 	ff.scrollbar:SetMinMaxValues(1, math.max(#ff.menuItems - ff.numRows + 1, 1))
@@ -26,7 +26,7 @@ o.GUIblacklistPage = function(N)
 			ff.rows[i]:Enable()
 			if ff.menuItems[index].name then
 			else
-				local n, itemLink = GetItemInfo(mOnWDSave.blacklist[index])
+				local n, itemLink = GetItemInfo(WrdHlpSave.blacklist[index])
 				ff.menuItems[index].name = n
 			end
 			ff.rows[i].text:SetText(ff.menuItems[index].name or "---")
@@ -41,7 +41,7 @@ o.GUIblacklistPage = function(N)
 end
 
 o.resetSettings = function()
-	mOnWDSave = nil
+	WrdHlpSave = nil
 	o.fixSettings()
 	o.GUIfixOptions()
 	o.reset()
@@ -49,43 +49,43 @@ end
 
 o.GUIfixOptions = function()
 	o.GUIshowTabOptions(1)
-	mOnWD_OptionsFrame.hideList:SetChecked(mOnWDSave.hideList)
-	mOnWD_OptionsFrame.disableProgress:SetChecked(mOnWDSave.disableProgress)
-	mOnWD_OptionsFrame.hideMinimap:SetChecked(mOnWDSave.minimap.hide)
-	mOnWD_OptionsFrame.disableConfirmation:SetChecked(mOnWDSave.disableConfirmation)
-	mOnWD_OptionsFrame.completionistMode:SetChecked(mOnWDSave.completionistMode)
-	mOnWD_OptionsFrame.hideCompletedInstances:SetChecked(mOnWDSave.hideCompletedInstances)
-	mOnWD_OptionsFrame.onlyMiniList:SetChecked(mOnWDSave.onlyMiniList)
-	mOnWD_OptionsFrame.reloadOnStart:SetChecked(mOnWDSave.reloadOnStart)
-	mOnWD_OptionsFrame.scale:SetText(mOnWDSave.miniListScale)
-	mOnWD_OptionsFrame.rowCount:SetText(mOnWDSave.miniListRowCount)
+	WrdHlp_OptionsFrame.hideList:SetChecked(WrdHlpSave.hideList)
+	WrdHlp_OptionsFrame.disableProgress:SetChecked(WrdHlpSave.disableProgress)
+	WrdHlp_OptionsFrame.hideMinimap:SetChecked(WrdHlpSave.minimap.hide)
+	WrdHlp_OptionsFrame.disableConfirmation:SetChecked(WrdHlpSave.disableConfirmation)
+	WrdHlp_OptionsFrame.completionistMode:SetChecked(WrdHlpSave.completionistMode)
+	WrdHlp_OptionsFrame.hideCompletedInstances:SetChecked(WrdHlpSave.hideCompletedInstances)
+	WrdHlp_OptionsFrame.onlyMiniList:SetChecked(WrdHlpSave.onlyMiniList)
+	WrdHlp_OptionsFrame.reloadOnStart:SetChecked(WrdHlpSave.reloadOnStart)
+	WrdHlp_OptionsFrame.scale:SetText(WrdHlpSave.miniListScale)
+	WrdHlp_OptionsFrame.rowCount:SetText(WrdHlpSave.miniListRowCount)
 	createMenuItems()
 end
 
 o.GUIshowOptions = function()
-  mOnWD_MainFrame:Hide()
-  mOnWD_MainFrame.ItemFrame:Hide()
+  WrdHlp_MainFrame:Hide()
+  WrdHlp_MainFrame.ItemFrame:Hide()
 	o.GUIfixOptions()
 	o.GUIblacklistPage(1)
-  mOnWD_OptionsFrame:Show()
+  WrdHlp_OptionsFrame:Show()
 end
 
 o.GUIshowTabOptions = function(number)
-	mOnWD_OptionsFrame.tab = number
-	for i=1,#mOnWD_OptionsFrame.tabItems do
-		local tab = mOnWD_OptionsFrame.tabItems[i]
+	WrdHlp_OptionsFrame.tab = number
+	for i=1,#WrdHlp_OptionsFrame.tabItems do
+		local tab = WrdHlp_OptionsFrame.tabItems[i]
 		for j=1,#tab do
 			tab[j]:Hide()
 		end
 	end
-	local tab = mOnWD_OptionsFrame.tabItems[number]
+	local tab = WrdHlp_OptionsFrame.tabItems[number]
 	for i=1,#tab do
 		tab[i]:Show()
 	end
-	for i=1,#mOnWD_OptionsFrame.tabOptions do
-		mOnWD_OptionsFrame.tabOptions[i].text:SetTextColor(1,1,1,1)
+	for i=1,#WrdHlp_OptionsFrame.tabOptions do
+		WrdHlp_OptionsFrame.tabOptions[i].text:SetTextColor(1,1,1,1)
 	end
-	mOnWD_OptionsFrame.tabOptions[number].text:SetTextColor(1,0.8,0,1)
+	WrdHlp_OptionsFrame.tabOptions[number].text:SetTextColor(1,0.8,0,1)
 end
 
 ---------------------------------------------------------------
@@ -114,7 +114,7 @@ local function CreateTableRow(parent, rowHeight, N, text)
 	return row
 end
 
-local fr = CreateFrame("Frame", "mOnWD_OptionsFrame")
+local fr = CreateFrame("Frame", "WrdHlp_OptionsFrame")
 fr.tabItems = {}
 fr.tabOptions = {}
 fr:Hide()
@@ -133,7 +133,7 @@ h:SetPoint("TOP", 0, 15)
 fr.HeaderTexture = h
 fr.title = fr:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 fr.title:SetPoint("TOP", h, "TOP", 0, -15)
-fr.title:SetText("mOnAr's Wardrobe Helper (v" .. o.version .. ")")
+fr.title:SetText("Wardrobe Helper (v" .. o.version .. ")")
 fr:SetBackdrop(
 	{
 		bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
@@ -155,7 +155,7 @@ fr:RegisterForDrag("LeftButton")
 fr:SetScript("OnDragStart", fr.StartMoving)
 fr:SetScript("OnDragStop", fr.StopMovingOrSizing)
 
-local b = CreateFrame("BUTTON", "mOnWD_OptionsFrame_Close", fr, "UIPanelButtonTemplate")
+local b = CreateFrame("BUTTON", "WrdHlp_OptionsFrame_Close", fr, "UIPanelButtonTemplate")
 fr.bClose = b
 b:SetText(o.strings["Close"])
 b:SetHeight(25)
@@ -165,7 +165,7 @@ b:SetScript("OnClick", function()
 	fr:Hide()
 end)
 
-local b = CreateFrame("BUTTON", "mOnWD_OptionsFrame_Def", fr, "UIPanelButtonTemplate")
+local b = CreateFrame("BUTTON", "WrdHlp_OptionsFrame_Def", fr, "UIPanelButtonTemplate")
 fr.bDef = b
 b:SetText(o.strings["Defaults"])
 b:SetHeight(25)
@@ -175,7 +175,7 @@ b:SetScript("OnClick", function()
 	o.resetSettings()
 end)
 
-local panel = CreateFrame("Frame", "mOnWD_OptionsFrame_Panel", fr)
+local panel = CreateFrame("Frame", "WrdHlp_OptionsFrame_Panel", fr)
 fr.panel = panel
 fr.panel:SetPoint("TOPLEFT", fr, "TOPLEFT", 110, -10)
 fr.panel:SetPoint("BOTTOMRIGHT", fr, "BOTTOMRIGHT", -15, 39)
@@ -193,7 +193,7 @@ border:SetBackdropColor(0.1, 0.1, 0.1, 0.5)
 border:SetBackdropBorderColor(0.4, 0.4, 0.4)
 fr.panel.border = border
 
-local panel = CreateFrame("Frame", "mOnWD_OptionsFrame_Panel2", fr)
+local panel = CreateFrame("Frame", "WrdHlp_OptionsFrame_Panel2", fr)
 fr.panelSelect = panel
 fr.panelSelect:SetPoint("TOPLEFT", fr, "TOPLEFT", 15, -10)
 fr.panelSelect:SetPoint("BOTTOMRIGHT", fr.panel, "BOTTOMLEFT", -1, 0)
@@ -219,33 +219,33 @@ for i=1,#fr.tabOptions do
 	fr.tabItems[i] = {}
 end
 
-local n = CreateFrame("CheckButton", "mOnWD_OptionsFrame_HideList", fr.panel.border, "ChatConfigCheckButtonTemplate")
+local n = CreateFrame("CheckButton", "WrdHlp_OptionsFrame_HideList", fr.panel.border, "ChatConfigCheckButtonTemplate")
 fr.hideList = n
 table.insert(fr.tabItems[1], n)
 n:SetPoint("TOPLEFT", fr.panel, "TOPLEFT", 10, -35)
-mOnWD_OptionsFrame_HideListText:SetText(o.strings["Hide List Option"])
+WrdHlp_OptionsFrame_HideListText:SetText(o.strings["Hide List Option"])
 n:SetScript("OnClick", function()
 		if n:GetChecked() then
-			mOnWDSave.hideList = true
+			WrdHlpSave.hideList = true
 		else
-			mOnWDSave.hideList = false
+			WrdHlpSave.hideList = false
 		end
 	end);
 
-local n = CreateFrame("CheckButton", "mOnWD_OptionsFrame_DisableProgress", fr.panel.border, "ChatConfigCheckButtonTemplate")
+local n = CreateFrame("CheckButton", "WrdHlp_OptionsFrame_DisableProgress", fr.panel.border, "ChatConfigCheckButtonTemplate")
 fr.disableProgress = n
 table.insert(fr.tabItems[1], n)
 n:SetPoint("TOPLEFT", fr.panel, "TOPLEFT", 10, -60)
-mOnWD_OptionsFrame_DisableProgressText:SetText(o.strings["Disable Progress"])
+WrdHlp_OptionsFrame_DisableProgressText:SetText(o.strings["Disable Progress"])
 n:SetScript("OnClick", function()
 		if n:GetChecked() then
-			mOnWDSave.disableProgress = true
+			WrdHlpSave.disableProgress = true
 		else
-			mOnWDSave.disableProgress = false
+			WrdHlpSave.disableProgress = false
 		end
 	end);
 
-local fs = fr.panel:CreateFontString("mOnWD_OptionsFrame_DisableProgress_Info","OVERLAY","GameFontNormalSmall")
+local fs = fr.panel:CreateFontString("WrdHlp_OptionsFrame_DisableProgress_Info","OVERLAY","GameFontNormalSmall")
 fr.disableProgressInfo = fs
 fs:SetWidth(350)
 fs:SetHeight(0)
@@ -254,51 +254,51 @@ fs:SetPoint("TOPLEFT", fr.panel, "TOPLEFT", 30, -80)
 fs:SetText(o.strings["Disable Progress Info"])
 table.insert(fr.tabItems[1], fs)
 
-local n = CreateFrame("CheckButton", "mOnWD_OptionsFrame_DisableMinimapButton", fr.panel.border, "ChatConfigCheckButtonTemplate")
+local n = CreateFrame("CheckButton", "WrdHlp_OptionsFrame_DisableMinimapButton", fr.panel.border, "ChatConfigCheckButtonTemplate")
 fr.hideMinimap = n
 table.insert(fr.tabItems[1], n)
 n:SetPoint("TOPLEFT", fr.panel, "TOPLEFT", 10, -95)
-mOnWD_OptionsFrame_DisableMinimapButtonText:SetText(o.strings["Hide Minimap"])
+WrdHlp_OptionsFrame_DisableMinimapButtonText:SetText(o.strings["Hide Minimap"])
 n:SetScript("OnClick", function()
 		if n:GetChecked() then
-			mOnWDSave.minimap.hide = true
+			WrdHlpSave.minimap.hide = true
 		else
-			mOnWDSave.minimap.hide = false
+			WrdHlpSave.minimap.hide = false
 		end
-		if mOnWDSave.minimap.hide then
+		if WrdHlpSave.minimap.hide then
 			o.LDBI:Hide("Wardrobe Helper")
 		else
 			o.LDBI:Show("Wardrobe Helper")
 		end
 	end);
 
-local n = CreateFrame("CheckButton", "mOnWD_OptionsFrame_DisableConfirmation", fr.panel.border, "ChatConfigCheckButtonTemplate")
+local n = CreateFrame("CheckButton", "WrdHlp_OptionsFrame_DisableConfirmation", fr.panel.border, "ChatConfigCheckButtonTemplate")
 fr.disableConfirmation = n
 table.insert(fr.tabItems[1], n)
 n:SetPoint("TOPLEFT", fr.panel, "TOPLEFT", 10, -120)
-mOnWD_OptionsFrame_DisableConfirmationText:SetText(o.strings["Disable Confirmation"])
+WrdHlp_OptionsFrame_DisableConfirmationText:SetText(o.strings["Disable Confirmation"])
 n:SetScript("OnClick", function()
 		if n:GetChecked() then
-			mOnWDSave.disableConfirmation = true
+			WrdHlpSave.disableConfirmation = true
 		else
-			mOnWDSave.disableConfirmation = false
+			WrdHlpSave.disableConfirmation = false
 		end
 	end);
 
-local n = CreateFrame("CheckButton", "mOnWD_OptionsFrame_CompletionistMode", fr.panel.border, "ChatConfigCheckButtonTemplate")
+local n = CreateFrame("CheckButton", "WrdHlp_OptionsFrame_CompletionistMode", fr.panel.border, "ChatConfigCheckButtonTemplate")
 fr.completionistMode = n
 table.insert(fr.tabItems[1], n)
 n:SetPoint("TOPLEFT", fr.panel, "TOPLEFT", 10, -145)
-mOnWD_OptionsFrame_CompletionistModeText:SetText(o.strings["Completionist Mode"])
+WrdHlp_OptionsFrame_CompletionistModeText:SetText(o.strings["Completionist Mode"])
 n:SetScript("OnClick", function()
 		if n:GetChecked() then
-			mOnWDSave.completionistMode = true
+			WrdHlpSave.completionistMode = true
 		else
-			mOnWDSave.completionistMode = false
+			WrdHlpSave.completionistMode = false
 		end
 	end);
 
-local fs = fr.panel:CreateFontString("mOnWD_OptionsFrame_CompletionistMode_Info","OVERLAY","GameFontNormalSmall");
+local fs = fr.panel:CreateFontString("WrdHlp_OptionsFrame_CompletionistMode_Info","OVERLAY","GameFontNormalSmall");
 fr.disableProgressInfo = fs;
 fs:SetWidth(350);
 fs:SetHeight(0);
@@ -307,48 +307,48 @@ fs:SetPoint("TOPLEFT", fr.panel, "TOPLEFT", 30, -165)
 fs:SetText(o.strings["Completionist Mode Info"])
 table.insert(fr.tabItems[1], fs)
 
-local n = CreateFrame("CheckButton", "mOnWD_OptionsFrame_HideCompletedInstances", fr.panel.border, "ChatConfigCheckButtonTemplate")
+local n = CreateFrame("CheckButton", "WrdHlp_OptionsFrame_HideCompletedInstances", fr.panel.border, "ChatConfigCheckButtonTemplate")
 fr.hideCompletedInstances = n
 table.insert(fr.tabItems[1], n)
 n:SetPoint("TOPLEFT", fr.panel, "TOPLEFT", 10, -180)
-mOnWD_OptionsFrame_HideCompletedInstancesText:SetText(o.strings["Hide Completed Instances"])
+WrdHlp_OptionsFrame_HideCompletedInstancesText:SetText(o.strings["Hide Completed Instances"])
 n:SetScript("OnClick", function()
 		if n:GetChecked() then
-			mOnWDSave.hideCompletedInstances = true
+			WrdHlpSave.hideCompletedInstances = true
 			o.createMenuItems()
 		else
-			mOnWDSave.hideCompletedInstances = false
+			WrdHlpSave.hideCompletedInstances = false
 			o.createMenuItems()
 		end
 	end);
 
-local n = CreateFrame("CheckButton", "mOnWD_OptionsFrame_ReloadOnStart", fr.panel.border, "ChatConfigCheckButtonTemplate")
+local n = CreateFrame("CheckButton", "WrdHlp_OptionsFrame_ReloadOnStart", fr.panel.border, "ChatConfigCheckButtonTemplate")
 fr.reloadOnStart = n
 table.insert(fr.tabItems[1], n)
 n:SetPoint("TOPLEFT", fr.panel, "TOPLEFT", 10, -205)
-mOnWD_OptionsFrame_ReloadOnStartText:SetText(o.strings["Reload on Start"])
+WrdHlp_OptionsFrame_ReloadOnStartText:SetText(o.strings["Reload on Start"])
 n:SetScript("OnClick", function()
 		if n:GetChecked() then
-			mOnWDSave.reloadOnStart = true
+			WrdHlpSave.reloadOnStart = true
 		else
-			mOnWDSave.reloadOnStart = false
+			WrdHlpSave.reloadOnStart = false
 		end
 	end)
 
-local n = CreateFrame("CheckButton", "mOnWD_OptionsFrame_OnlyMiniList", fr.panel.border, "ChatConfigCheckButtonTemplate")
+local n = CreateFrame("CheckButton", "WrdHlp_OptionsFrame_OnlyMiniList", fr.panel.border, "ChatConfigCheckButtonTemplate")
 fr.onlyMiniList = n
 table.insert(fr.tabItems[2], n)
 n:SetPoint("TOPLEFT", fr.panel, "TOPLEFT", 10, -35)
-mOnWD_OptionsFrame_OnlyMiniListText:SetText(o.strings["Only Minilist"])
+WrdHlp_OptionsFrame_OnlyMiniListText:SetText(o.strings["Only Minilist"])
 n:SetScript("OnClick", function()
 		if n:GetChecked() then
-			mOnWDSave.onlyMiniList = true
+			WrdHlpSave.onlyMiniList = true
 		else
-			mOnWDSave.onlyMiniList = false
+			WrdHlpSave.onlyMiniList = false
 		end
 	end)
 
-local fs = fr.panel:CreateFontString("mOnWD_OptionsFrame_Scale_Info","OVERLAY","GameFontNormalSmall")
+local fs = fr.panel:CreateFontString("WrdHlp_OptionsFrame_Scale_Info","OVERLAY","GameFontNormalSmall")
 fs:SetWidth(300)
 fs:SetHeight(0)
 fs:SetJustifyH("LEFT")
@@ -356,7 +356,7 @@ fs:SetPoint("TOPLEFT", fr.panel, "TOPLEFT", 10, -70)
 fs:SetText(o.strings["Scale"] .. " (" .. o.strings["Press Enter to Save"] .. "):")
 table.insert(fr.tabItems[2], fs)
 
-local b = CreateFrame("EditBox", "mOnWD_OptionsFrame_Scale", fr.panel.border, "InputBoxTemplate")
+local b = CreateFrame("EditBox", "WrdHlp_OptionsFrame_Scale", fr.panel.border, "InputBoxTemplate")
 table.insert(fr.tabItems[2], b)
 fr.scale = b
 b:SetPoint("TOPLEFT", fr.panel, "TOPLEFT", 20, -80)
@@ -374,18 +374,18 @@ b:SetScript("OnEnterPressed", function(self)
 		if val > 5 then
 			val = 5
 		end
-		mOnWDSave.miniListScale = val
-		mOnWD_MiniList:SetScale(val)
+		WrdHlpSave.miniListScale = val
+		WrdHlp_MiniList:SetScale(val)
 	end
-	b:SetText(mOnWDSave.miniListScale)
+	b:SetText(WrdHlpSave.miniListScale)
 	b:ClearFocus()
 end)
 b:SetScript("OnEscapePressed", function()
-	b:SetText(mOnWDSave.miniListScale)
+	b:SetText(WrdHlpSave.miniListScale)
 	b:ClearFocus()
 end)
 
-local fs = fr.panel:CreateFontString("mOnWD_OptionsFrame_RowCount_Info","OVERLAY","GameFontNormalSmall")
+local fs = fr.panel:CreateFontString("WrdHlp_OptionsFrame_RowCount_Info","OVERLAY","GameFontNormalSmall")
 fs:SetWidth(300)
 fs:SetHeight(0)
 fs:SetJustifyH("LEFT")
@@ -393,7 +393,7 @@ fs:SetPoint("TOPLEFT", fr.panel, "TOPLEFT", 10, -120)
 fs:SetText(o.strings["Row count"] .. " (" .. o.strings["Press Enter to Save"] .. "):")
 table.insert(fr.tabItems[2], fs)
 
-local b = CreateFrame("EditBox", "mOnWD_OptionsFrame_RowCount", fr.panel.border, "InputBoxTemplate")
+local b = CreateFrame("EditBox", "WrdHlp_OptionsFrame_RowCount", fr.panel.border, "InputBoxTemplate")
 table.insert(fr.tabItems[2], b)
 fr.rowCount = b
 b:SetPoint("TOPLEFT", fr.panel, "TOPLEFT", 20, -130)
@@ -412,19 +412,19 @@ b:SetScript("OnEnterPressed", function(self)
 			val = 100
 		end
 		val = math.floor(val)
-		mOnWDSave.miniListRowCount = val
-		mOnWD_MiniList:SetRowCount(val)
+		WrdHlpSave.miniListRowCount = val
+		WrdHlp_MiniList:SetRowCount(val)
 		o.GUIopenMiniList(nil, nil, nil, true)
 	end
-	b:SetText(mOnWDSave.miniListRowCount)
+	b:SetText(WrdHlpSave.miniListRowCount)
 	b:ClearFocus()
 end)
 b:SetScript("OnEscapePressed", function()
-	b:SetText(mOnWDSave.miniListRowCount)
+	b:SetText(WrdHlpSave.miniListRowCount)
 	b:ClearFocus()
 end)
 
-local fs = fr.panel:CreateFontString("mOnWD_OptionsFrame_Debug_Info","OVERLAY","GameFontNormalSmall")
+local fs = fr.panel:CreateFontString("WrdHlp_OptionsFrame_Debug_Info","OVERLAY","GameFontNormalSmall")
 fs:SetWidth(300)
 fs:SetHeight(0)
 fs:SetJustifyH("LEFT")
@@ -432,7 +432,7 @@ fs:SetPoint("TOPLEFT", fr.panel, "TOPLEFT", 10, -35)
 fs:SetText(o.strings["Debug Info"])
 table.insert(fr.tabItems[4], fs)
 
-local fs = fr.panel:CreateFontString("mOnWD_OptionsFrame_Blacklist_Info","OVERLAY","GameFontNormalSmall")
+local fs = fr.panel:CreateFontString("WrdHlp_OptionsFrame_Blacklist_Info","OVERLAY","GameFontNormalSmall")
 fs:SetWidth(300)
 fs:SetHeight(0)
 fs:SetJustifyH("LEFT")
@@ -474,9 +474,9 @@ local function CreateTableRow(parent, rowHeight, N)
 	row.text = c
 
 	row:SetScript("OnClick", function()
-			for i=#mOnWDSave.blacklist,1,-1 do
-				if(mOnWDSave.blacklist[i] == row.id) then
-					table.remove(mOnWDSave.blacklist, i)
+			for i=#WrdHlpSave.blacklist,1,-1 do
+				if(WrdHlpSave.blacklist[i] == row.id) then
+					table.remove(WrdHlpSave.blacklist, i)
 				end
 			end
       print(string.format(o.strings["Item removed from blacklist"], row.itemLink .. "|cFFFF7D0A"))
@@ -492,9 +492,9 @@ local function CreateTableRow(parent, rowHeight, N)
   return row
 end
 
-local ff = CreateFrame("FRAME", "mOnWD_Options_BlackListList", fr.panel)
+local ff = CreateFrame("FRAME", "WrdHlp_Options_BlackListList", fr.panel)
 table.insert(fr.tabItems[3], ff)
-ff:SetPoint("TOPLEFT", mOnWD_OptionsFrame_Blacklist_Info, "BOTTOMLEFT",0,-10)
+ff:SetPoint("TOPLEFT", WrdHlp_OptionsFrame_Blacklist_Info, "BOTTOMLEFT",0,-10)
 ff:SetPoint("BOTTOMRIGHT", fr.panel, "BOTTOMRIGHT",-10,35)
 fr.blacklist = ff
 

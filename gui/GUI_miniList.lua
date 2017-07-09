@@ -1,10 +1,10 @@
-local o = mOnWardrobe
+local o = WardrobeHelper
 
 ---------------------------------------------------------------
 --  Create UI
 ---------------------------------------------------------------
 
-local f = CreateFrame("FRAME", "mOnWD_MiniList", UIParent)
+local f = CreateFrame("FRAME", "WrdHlp_MiniList", UIParent)
 f:SetPoint("CENTER",0,0)
 f:SetFrameStrata("high")
 f:SetMovable(true)
@@ -49,7 +49,7 @@ local filename, fontHeight, flags = c:GetFont()
 c:SetFont(filename, fontHeight, "OUTLINE")
 f.status.text = c
 
-local ff = CreateFrame("FRAME", "mOnWD_MiniList_List", f)
+local ff = CreateFrame("FRAME", "WrdHlp_MiniList_List", f)
 ff:SetPoint("TOPLEFT", f.status, "BOTTOMLEFT",0,0)
 ff:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT",0,0)
 f.list = ff
@@ -100,14 +100,14 @@ local function CreateTableRow(parent, rowHeight, N)
 
     if(button == "LeftButton" and IsAltKeyDown()) then
       local found = false
-      for i = 1,#mOnWDSave.blacklist do
-        if mOnWDSave.blacklist[i] == self.id then
+      for i = 1,#WrdHlpSave.blacklist do
+        if WrdHlpSave.blacklist[i] == self.id then
           found = true
           break
         end
       end
       if found == false then
-        table.insert(mOnWDSave.blacklist, self.id)
+        table.insert(WrdHlpSave.blacklist, self.id)
       end
       o.refreshInstance(o.selection.miniList.instance)
       o.setDifficulty(o.selection.miniList.difficulty)
@@ -148,8 +148,8 @@ local function CreateTableRow(parent, rowHeight, N)
   b:SetHeight(25)
   b:SetWidth(25)
   b:SetScript("OnClick", function()
-    local tmp = mOnWD_MiniList.D + 1
-    if tmp > #mOnWD_MiniList.difficulties then
+    local tmp = WrdHlp_MiniList.D + 1
+    if tmp > #WrdHlp_MiniList.difficulties then
       tmp = 1
     end
     o.GUIopenMiniList(nil, nil, f.difficulties[tmp], true)
@@ -159,7 +159,7 @@ local function CreateTableRow(parent, rowHeight, N)
   return row
 end
 
-function mOnWD_MiniList:SetRowCount(count)
+function WrdHlp_MiniList:SetRowCount(count)
   local ff = self.list
   ff.numRows = count
   self:SetHeight(ff.numRows * ff.rowHeight + (self:GetHeight() - ff:GetHeight()))
@@ -180,14 +180,14 @@ function mOnWD_MiniList:SetRowCount(count)
   end
 end
 
-mOnWD_MiniList:SetRowCount(numRows)
+WrdHlp_MiniList:SetRowCount(numRows)
 
 ---------------------------------------------------------------
 --  Methods
 ---------------------------------------------------------------
 
 o.GUIopenMiniList = function(N, instance, difficulty, dontAffectVisibility)
-  local f = mOnWD_MiniList
+  local f = WrdHlp_MiniList
   local ff = f.list
   local s = o.selection.miniList
 
@@ -235,7 +235,7 @@ o.GUIopenMiniList = function(N, instance, difficulty, dontAffectVisibility)
     end
 
     local total = data['total']
-    if mOnWDSave.disableProgress then
+    if WrdHlpSave.disableProgress then
       f.status.text:SetText(total);
       f.status:SetValue(0)
     else

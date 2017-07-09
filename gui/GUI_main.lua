@@ -1,4 +1,4 @@
-local o = mOnWardrobe
+local o = WardrobeHelper
 
 ---------------------------------------------------------------
 --  Initialization
@@ -10,13 +10,13 @@ o.CURRENT_PAGE = 1
 --  Create UI
 ---------------------------------------------------------------
 
-mOnWD_MainFrame = CreateFrame("FRAME","mOnWD_MainFrame",UIParent,"ButtonFrameTemplate");
-mOnWD_MainFrameTitleText:SetText("mOnAr's Wardrobe Helper (v" .. o.version .. ")");
-local f = mOnWD_MainFrame;
+WrdHlp_MainFrame = CreateFrame("FRAME","WrdHlp_MainFrame",UIParent,"ButtonFrameTemplate");
+WrdHlp_MainFrameTitleText:SetText("Wardrobe Helper (v" .. o.version .. ")");
+local f = WrdHlp_MainFrame;
 f:SetHeight(512);
 f:SetWidth(384);
 f:Hide();
-tinsert(UISpecialFrames,"mOnWD_MainFrame");
+tinsert(UISpecialFrames,"WrdHlp_MainFrame");
 f:SetFrameStrata("high");
 f:SetPoint("CENTER",0,0);
 f:SetMovable(true);
@@ -25,35 +25,35 @@ f:SetClampedToScreen(true);
 f:RegisterForDrag("LeftButton");
 f:SetScript("OnDragStart", f.StartMoving)
 f:SetScript("OnDragStop", f.StopMovingOrSizing)
-SetPortraitToTexture(mOnWD_MainFramePortrait, "Interface\\Icons\\INV_Chest_Cloth_17");
+SetPortraitToTexture(WrdHlp_MainFramePortrait, "Interface\\Icons\\INV_Chest_Cloth_17");
 
-local f=CreateFrame("FRAME",nil,mOnWD_MainFrame);
-mOnWD_MainFrame.ListFrame = f;
+local f=CreateFrame("FRAME",nil,WrdHlp_MainFrame);
+WrdHlp_MainFrame.ListFrame = f;
 f:SetHeight(512);
 f:SetWidth(384);
 f:EnableMouse(false);
-f:SetAllPoints(mOnWD_MainFrame);
+f:SetAllPoints(WrdHlp_MainFrame);
 
-local b = CreateFrame("BUTTON","mOnWD_MainFrame_bRefresh",f,"UIPanelButtonTemplate")
+local b = CreateFrame("BUTTON","WrdHlp_MainFrame_bRefresh",f,"UIPanelButtonTemplate")
 f.bRefresh = b;
 b:SetPoint("TOPRIGHT",-10,-35);
 b:SetText(o.strings["Refresh Items"])
 b:SetHeight(25);
 b:SetWidth(120);
 b:SetScript("OnClick", function()
-	if mOnWDSave.disableConfirmation then
-		if mOnWD_MainFrame.ItemFrame then
-			mOnWD_MainFrame.ItemFrame:Hide()
+	if WrdHlpSave.disableConfirmation then
+		if WrdHlp_MainFrame.ItemFrame then
+			WrdHlp_MainFrame.ItemFrame:Hide()
 		end
 		o.updateMissingVisuals()
 	else
-		StaticPopup_Show ("MONWD_CONFIRMATION")
+		StaticPopup_Show ("WRDHLP_CONFIRMATION")
 	end
 	end)
 
-local b = CreateFrame("BUTTON","mOnWD_MainFrame_bCurrentInstance",f,"UIPanelButtonTemplate");
+local b = CreateFrame("BUTTON","WrdHlp_MainFrame_bCurrentInstance",f,"UIPanelButtonTemplate");
 f.bInstance = b;
-b:SetPoint("RIGHT", mOnWD_MainFrame_bRefresh, "LEFT", -10, 0);
+b:SetPoint("RIGHT", WrdHlp_MainFrame_bRefresh, "LEFT", -10, 0);
 b:SetText(o.strings["Current Instance"])
 b:SetHeight(25);
 b:SetWidth(120);
@@ -164,12 +164,12 @@ local function CreateTableRow(parent, rowHeight, N)
 	row:SetScript("OnClick", function(self, button)
 		-- ** HgD CODE CHANGES START HERE ** --
 		if button == "LeftButton" and IsShiftKeyDown() then
-			if mOnWDSave.favoriteInstances[row.text2:GetText()] == 1 or mOnWDSave.favoriteInstances[row.text2:GetText()] == true then
-				mOnWDSave.favoriteInstances[row.text2:GetText()] = nil
-			elseif mOnWDSave.favoriteInstances[row.text2:GetText()] ~= nil then
-				mOnWDSave.favoriteInstances[row.text2:GetText()] = mOnWDSave.favoriteInstances[row.text2:GetText()] - 1
+			if WrdHlpSave.favoriteInstances[row.text2:GetText()] == 1 or WrdHlpSave.favoriteInstances[row.text2:GetText()] == true then
+				WrdHlpSave.favoriteInstances[row.text2:GetText()] = nil
+			elseif WrdHlpSave.favoriteInstances[row.text2:GetText()] ~= nil then
+				WrdHlpSave.favoriteInstances[row.text2:GetText()] = WrdHlpSave.favoriteInstances[row.text2:GetText()] - 1
 			else
-				mOnWDSave.favoriteInstances[row.text2:GetText()] = 8
+				WrdHlpSave.favoriteInstances[row.text2:GetText()] = 8
 			end
 			o.GUIpagingHelper(o.CURRENT_PAGE)
 		elseif button == "LeftButton" then
@@ -177,13 +177,13 @@ local function CreateTableRow(parent, rowHeight, N)
 		end
 
 		if button == "RightButton" and IsShiftKeyDown() then
-			if mOnWDSave.favoriteInstances[row.text2:GetText()] == 8 then
-				mOnWDSave.favoriteInstances[row.text2:GetText()] = nil
-			elseif mOnWDSave.favoriteInstances[row.text2:GetText()] ~= nil then
-				if mOnWDSave.favoriteInstances[row.text2:GetText()] == true then mOnWDSave.favoriteInstances[row.text2:GetText()] = 1 end
-				mOnWDSave.favoriteInstances[row.text2:GetText()] = mOnWDSave.favoriteInstances[row.text2:GetText()] + 1
+			if WrdHlpSave.favoriteInstances[row.text2:GetText()] == 8 then
+				WrdHlpSave.favoriteInstances[row.text2:GetText()] = nil
+			elseif WrdHlpSave.favoriteInstances[row.text2:GetText()] ~= nil then
+				if WrdHlpSave.favoriteInstances[row.text2:GetText()] == true then WrdHlpSave.favoriteInstances[row.text2:GetText()] = 1 end
+				WrdHlpSave.favoriteInstances[row.text2:GetText()] = WrdHlpSave.favoriteInstances[row.text2:GetText()] + 1
 			else
-				mOnWDSave.favoriteInstances[row.text2:GetText()] = 1
+				WrdHlpSave.favoriteInstances[row.text2:GetText()] = 1
 			end
 			o.GUIpagingHelper(o.CURRENT_PAGE)
 		end
@@ -205,7 +205,7 @@ local function CreateTableRow(parent, rowHeight, N)
 						local collected = o.instances[row.text2:GetText()]['difficulties'][k]['collected']
 						local percent = math.floor((collected / total * 100) + 0.5)
 						if total == 0 or percent > 100 then percent = 100 end
-						GameTooltip:AddDoubleLine(k, mOnWDSave.disableProgress and total or (collected .. " / " .. total) .. " (" .. percent .. "%)")
+						GameTooltip:AddDoubleLine(k, WrdHlpSave.disableProgress and total or (collected .. " / " .. total) .. " (" .. percent .. "%)")
 					end
 					GameTooltip:Show()
 				end
@@ -326,21 +326,21 @@ c:SetColorTexture(0,0,0,0.8)
 c:SetAllPoints(scrollbar);
 scrollbar.background = c;
 
-local n = CreateFrame("CheckButton", "mOnWD_hideList", mOnWD_MainFrame, "ChatConfigCheckButtonTemplate")
-mOnWD_MainFrame.hideList = n
-n:SetPoint("BOTTOMLEFT", mOnWD_MainFrame, 5, 2)
-mOnWD_hideListText:SetText(o.strings["Hide List Option"])
+local n = CreateFrame("CheckButton", "WrdHlp_hideList", WrdHlp_MainFrame, "ChatConfigCheckButtonTemplate")
+WrdHlp_MainFrame.hideList = n
+n:SetPoint("BOTTOMLEFT", WrdHlp_MainFrame, 5, 2)
+WrdHlp_hideListText:SetText(o.strings["Hide List Option"])
 n:SetScript("OnClick", function()
 		if n:GetChecked() then
-			mOnWDSave.hideList = true
+			WrdHlpSave.hideList = true
 		else
-			mOnWDSave.hideList = false
+			WrdHlpSave.hideList = false
 		end
 	end);
 
-local b = CreateFrame("Button", nil, mOnWD_MainFrame)
-mOnWD_MainFrame.tutorial = b
-b:SetPoint("BOTTOMRIGHT", mOnWD_MainFrame, 0, -6)
+local b = CreateFrame("Button", nil, WrdHlp_MainFrame)
+WrdHlp_MainFrame.tutorial = b
+b:SetPoint("BOTTOMRIGHT", WrdHlp_MainFrame, 0, -6)
 b:SetWidth(40)
 b:SetHeight(40)
 b:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight", "ADD")
@@ -363,9 +363,9 @@ b:SetScript("OnLeave", function()
 	GameTooltip:Hide()
 end)
 
-local b = CreateFrame("Button", nil, mOnWD_MainFrame)
-mOnWD_MainFrame.bOptions = b
-b:SetPoint("TOPRIGHT", mOnWD_MainFrame, -30, -2)
+local b = CreateFrame("Button", nil, WrdHlp_MainFrame)
+WrdHlp_MainFrame.bOptions = b
+b:SetPoint("TOPRIGHT", WrdHlp_MainFrame, -30, -2)
 b:SetWidth(20)
 b:SetHeight(20)
 b:SetHighlightTexture("Interface\\Buttons\\UI-OptionsButton", "ADD")
@@ -378,13 +378,13 @@ b:SetScript("OnClick", function()
 	end)
 
 
-StaticPopupDialogs["MONWD_CONFIRMATION"] = {
+StaticPopupDialogs["WRDHLP_CONFIRMATION"] = {
   text = o.strings["Refresh Confirmation"],
   button1 = o.strings["Yes"],
   button2 = o.strings["No"],
   OnAccept = function()
-		if mOnWD_MainFrame.ItemFrame then
-			mOnWD_MainFrame.ItemFrame:Hide()
+		if WrdHlp_MainFrame.ItemFrame then
+			WrdHlp_MainFrame.ItemFrame:Hide()
 		end
 		o.updateMissingVisuals()
   end,
@@ -399,10 +399,10 @@ StaticPopupDialogs["MONWD_CONFIRMATION"] = {
 ---------------------------------------------------------------
 
 local function everythingNeededExists(i)
-	return mOnWD_MainFrame and mOnWD_MainFrame.ListFrame and mOnWD_MainFrame.ListFrame.RowFrame and mOnWD_MainFrame.ListFrame.RowFrame.rows and
-		mOnWD_MainFrame.ListFrame.RowFrame.rows[i] and mOnWD_MainFrame.ListFrame.RowFrame.rows[i].text1 and mOnWD_MainFrame.ListFrame.RowFrame.rows[i].text2
-		and mOnWD_MainFrame.ListFrame.RowFrame.rows[i].saved and mOnWD_MainFrame.ListFrame.RowFrame.rows[i].percent
-		and mOnWD_MainFrame.ListFrame.RowFrame.rows[i].status
+	return WrdHlp_MainFrame and WrdHlp_MainFrame.ListFrame and WrdHlp_MainFrame.ListFrame.RowFrame and WrdHlp_MainFrame.ListFrame.RowFrame.rows and
+		WrdHlp_MainFrame.ListFrame.RowFrame.rows[i] and WrdHlp_MainFrame.ListFrame.RowFrame.rows[i].text1 and WrdHlp_MainFrame.ListFrame.RowFrame.rows[i].text2
+		and WrdHlp_MainFrame.ListFrame.RowFrame.rows[i].saved and WrdHlp_MainFrame.ListFrame.RowFrame.rows[i].percent
+		and WrdHlp_MainFrame.ListFrame.RowFrame.rows[i].status
 end
 
 local function getSpecialMessage()
@@ -418,31 +418,31 @@ end
 
 o.GUIpagingHelper = function(N)
 	if o.loaded == false then
-		mOnWD_MainFrame.ListFrame.info:Show()
-		mOnWD_MainFrame.ListFrame.specialMessage:Show()
-		mOnWD_MainFrame.ListFrame.specialMessage:SetText(getSpecialMessage())
+		WrdHlp_MainFrame.ListFrame.info:Show()
+		WrdHlp_MainFrame.ListFrame.specialMessage:Show()
+		WrdHlp_MainFrame.ListFrame.specialMessage:SetText(getSpecialMessage())
 	else
-		mOnWD_MainFrame.ListFrame.info:Hide()
-		mOnWD_MainFrame.ListFrame.specialMessage:Hide()
+		WrdHlp_MainFrame.ListFrame.info:Hide()
+		WrdHlp_MainFrame.ListFrame.specialMessage:Hide()
 	end
 
-	local numRows = mOnWD_MainFrame.ListFrame.RowFrame.numRows
+	local numRows = WrdHlp_MainFrame.ListFrame.RowFrame.numRows
 
 	o.CURRENT_PAGE = N;
 
 	o.updateSavedInstances()
 
-	if mOnWDSave.disableProgress then
-		mOnWD_MainFrame.ListFrame.ColT1:SetText(o.strings["Missing Items"])
+	if WrdHlpSave.disableProgress then
+		WrdHlp_MainFrame.ListFrame.ColT1:SetText(o.strings["Missing Items"])
 	else
-		mOnWD_MainFrame.ListFrame.ColT1:SetText(o.strings["Progress"])
+		WrdHlp_MainFrame.ListFrame.ColT1:SetText(o.strings["Progress"])
 	end
 
 	local FirstN = N - 1
 	for i=1,numRows do
 		if everythingNeededExists(i) then
-			local row = mOnWD_MainFrame.ListFrame.RowFrame.rows[i]
-			if mOnWDSave.disableProgress then
+			local row = WrdHlp_MainFrame.ListFrame.RowFrame.rows[i]
+			if WrdHlpSave.disableProgress then
 				row.percent:Hide()
 			else
 				row.percent:Show()
@@ -467,7 +467,7 @@ o.GUIpagingHelper = function(N)
 								if o.instances[v[j]] then total = total + o.instances[v[j]]['total'] end
 							end
 						end
-						if mOnWDSave.disableProgress then
+						if WrdHlpSave.disableProgress then
 							row.text1:SetText(total)
 							row.percent:SetText("")
 							row.status:Show()
@@ -494,7 +494,7 @@ o.GUIpagingHelper = function(N)
 				else
 					local total = o.instances[item.name]['total']
 					row:Enable()
-					if mOnWDSave.disableProgress then
+					if WrdHlpSave.disableProgress then
 						row.text1:SetText(total)
 						row.status:SetValue(0)
 					else
@@ -510,9 +510,9 @@ o.GUIpagingHelper = function(N)
 					row.text2:SetTextColor(1,1,1,1)
 					row.percent:SetTextColor(1,1,1,1)
 					-- ** HgD CODE CHANGES START HERE ** --
-					if mOnWDSave.favoriteInstances[item.name] then
+					if WrdHlpSave.favoriteInstances[item.name] then
 						row.icon:Show()
-						local icon_no = mOnWDSave.favoriteInstances[item.name];
+						local icon_no = WrdHlpSave.favoriteInstances[item.name];
 						if (icon_no == true) then icon_no = 1 end
 						row.icon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_"..icon_no)
 					else
@@ -553,16 +553,16 @@ o.GUIpagingHelper = function(N)
 end
 
 o.GUImainPage = function(N)
-	local numRows = mOnWD_MainFrame.ListFrame.RowFrame.numRows
-	mOnWD_MainFrame.ListFrame.scrollbar:SetMinMaxValues(1, math.max(#o.menuItems - numRows + 1, 1))
-	mOnWD_MainFrame.ListFrame.scrollbar:SetValue(N)
+	local numRows = WrdHlp_MainFrame.ListFrame.RowFrame.numRows
+	WrdHlp_MainFrame.ListFrame.scrollbar:SetMinMaxValues(1, math.max(#o.menuItems - numRows + 1, 1))
+	WrdHlp_MainFrame.ListFrame.scrollbar:SetValue(N)
 	o.GUIpagingHelper(N)
 end
 
 o.GUIselect = function(instance)
-	if mOnWDSave.onlyMiniList then
-		if mOnWDSave.hideList then
-			mOnWD_MainFrame:Hide()
+	if WrdHlpSave.onlyMiniList then
+		if WrdHlpSave.hideList then
+			WrdHlp_MainFrame:Hide()
 		end
 		o.GUIopenMiniList(1, instance, '#first')
 	else
@@ -628,7 +628,7 @@ o.createMenuItems = function()
 			end
 			tmp.index = (#o.EXPS + 3) + (type / 10)
 		end
-		if tmp.type == '#done' and mOnWDSave.hideCompletedInstances then
+		if tmp.type == '#done' and WrdHlpSave.hideCompletedInstances then
 		else
 			table.insert(o.menuItems, tmp)
 		end

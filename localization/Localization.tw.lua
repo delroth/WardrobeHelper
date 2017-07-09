@@ -1,6 +1,6 @@
 if GetLocale() ~= "zhTW" then return end
 
-local o = mOnWardrobe
+local o = WardrobeHelper
 if o.strings == nil then o.strings = {} end
 local s = o.strings
 
@@ -77,7 +77,3 @@ s["Tier 16"] = "T16 套裝"
 s["Tier 17"] = "T17 套裝"
 s["Tier 18"] = "T18 套裝"
 s["Tier 19"] = "T19 套裝"
-
-s["mOnAr's Addons"] = "收藏-衣櫃"
-s["mOnAr's Addons Options"] = "mOnAr 的插件選項"
-s["This category contains Settings for every addon made by mOnAr (Seamoon)"] = "這裡包含了 mOnAr (Seamoon) 製作的所有插件的設定"

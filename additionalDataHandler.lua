@@ -1,4 +1,4 @@
-local o = mOnWardrobe
+local o = WardrobeHelper
 if o.additionalData == nil then o.additionalData = {} end
 
 local DressUpModel = CreateFrame('DressUpModel')
@@ -57,8 +57,8 @@ o.addAdditionalData = function(instances, useCoroutine)
               if appearanceID then
                 local sources = C_TransmogCollection.GetAppearanceSources(appearanceID)
                 if sources then
-                  local collected = o.isCollected(sources) and (mOnWDSave.completionistMode == false)
-  								collected = collected or (o.isCollected(sources, itemID) and mOnWDSave.completionistMode)
+                  local collected = o.isCollected(sources) and (WrdHlpSave.completionistMode == false)
+  								collected = collected or (o.isCollected(sources, itemID) and WrdHlpSave.completionistMode)
                   if o.isBlacklisted(itemID) == false then
                     if instances[instanceName] == nil then
                       instances[instanceName] = {}

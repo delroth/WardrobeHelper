@@ -1,4 +1,4 @@
-local o = mOnWardrobe
+local o = WardrobeHelper
 local c = {}
 o.categorization = c
 o.EXPS = {'Vanilla', 'Burning Crusade', 'WotLK', 'Cataclysm', 'Mists of Pandaria', 'Draenor', 'Legion'}

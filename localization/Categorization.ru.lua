@@ -1,6 +1,6 @@
 if GetLocale() ~= "ruRU" then return end
 
-local o = mOnWardrobe
+local o = WardrobeHelper
 local c = {}
 o.categorization = c
 o.EXPS = {'Классические подземелья', 'Burning Crusade', 'Wrath of the Lich King', 'Cataclysm', 'Mists of Pandaria', 'Warlords of Draenor', 'Legion'}

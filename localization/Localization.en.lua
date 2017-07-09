@@ -1,4 +1,4 @@
-local o = mOnWardrobe
+local o = WardrobeHelper
 if o.strings == nil then o.strings = {} end
 local s = o.strings
 

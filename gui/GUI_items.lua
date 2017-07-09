@@ -1,5 +1,5 @@
-local o = mOnWardrobe
-local f = mOnWD_MainFrame
+local o = WardrobeHelper
+local f = WrdHlp_MainFrame
 
 ---------------------------------------------------------------
 -- Initialization
@@ -64,14 +64,14 @@ local function createItemSlot(par, N)
 
 			if(button == "LeftButton" and IsAltKeyDown()) then
 			  local found = false
-				for i = 1,#mOnWDSave.blacklist do
-					if mOnWDSave.blacklist[i] == self.ItemID then
+				for i = 1,#WrdHlpSave.blacklist do
+					if WrdHlpSave.blacklist[i] == self.ItemID then
 						found = true
 						break
 					end
 				end
 				if found == false then
-					table.insert(mOnWDSave.blacklist, self.ItemID)
+					table.insert(WrdHlpSave.blacklist, self.ItemID)
 				end
 				o.refreshInstance(o.selection.itemList.instance)
 				o.setDifficulty(o.selection.itemList.difficulty)
@@ -90,8 +90,8 @@ end
 o.setDifficulty = function(difficulty)
 	if o.instances[o.selection.itemList.instance] == nil then return end
 
-	local scrollbar = mOnWD_MainFrame.ItemFrame.scrollbar
-	local iframe = mOnWD_MainFrame.ItemFrame.contentFrame
+	local scrollbar = WrdHlp_MainFrame.ItemFrame.scrollbar
+	local iframe = WrdHlp_MainFrame.ItemFrame.contentFrame
 	local bosses = o.instances[o.selection.itemList.instance]['difficulties'][difficulty]['bosses']
 
 	o.selection.itemList.difficulty = difficulty
@@ -131,7 +131,7 @@ o.setDifficulty = function(difficulty)
 		if #bosses[ordered_keys[i]]['items'] > 0 then
 			bossIndex = bossIndex + 1
 			if iframe.Bosses[bossIndex] == nil then
-				iframe.Bosses[bossIndex] = iframe:CreateFontString("mOnWD_ItemFrame_Boss" .. bossIndex,"OVERLAY","GameFontNormalLarge")
+				iframe.Bosses[bossIndex] = iframe:CreateFontString("WrdHlp_ItemFrame_Boss" .. bossIndex,"OVERLAY","GameFontNormalLarge")
 				iframe.Bosses[bossIndex]:SetWidth(400)
 				iframe.Bosses[bossIndex]:SetHeight(0)
 				iframe.Bosses[bossIndex]:SetJustifyH("LEFT")
@@ -167,12 +167,12 @@ o.setDifficulty = function(difficulty)
 		end
 	end
 
-	scrollbar:SetMinMaxValues(1, math.max(-top - mOnWD_MainFrame.ItemFrame:GetHeight() + 200, 2))
+	scrollbar:SetMinMaxValues(1, math.max(-top - WrdHlp_MainFrame.ItemFrame:GetHeight() + 200, 2))
 	scrollbar:SetValue(0)
 end
 
 local function clickDropdown(self)
-	UIDropDownMenu_SetSelectedID(mOnWD_ItemFrame_DropDown, self:GetID())
+	UIDropDownMenu_SetSelectedID(WrdHlp_ItemFrame_DropDown, self:GetID())
 	o.setDifficulty(self.value)
 end
 
@@ -186,44 +186,44 @@ local function initDropdown(self, level)
 		info.text = k
 		info.value = k
 		info.func = clickDropdown
-		mOnWD_MainFrame.ItemFrame.difficultyID[k] = i
+		WrdHlp_MainFrame.ItemFrame.difficultyID[k] = i
 		UIDropDownMenu_AddButton(info, level)
 		i = i + 1
 	end
 end
 
 o.GUIshowItems = function(instance)
-	if mOnWDSave.hideList then
-		mOnWD_MainFrame.ItemFrame:SetParent(UIParent)
-		mOnWD_MainFrame:Hide()
+	if WrdHlpSave.hideList then
+		WrdHlp_MainFrame.ItemFrame:SetParent(UIParent)
+		WrdHlp_MainFrame:Hide()
 	else
-		mOnWD_MainFrame.ItemFrame:SetParent(mOnWD_MainFrame)
-		mOnWD_MainFrame.ItemFrame:ClearAllPoints()
-		mOnWD_MainFrame.ItemFrame:SetPoint("LEFT", mOnWD_MainFrame, "RIGHT", 5, 0)
+		WrdHlp_MainFrame.ItemFrame:SetParent(WrdHlp_MainFrame)
+		WrdHlp_MainFrame.ItemFrame:ClearAllPoints()
+		WrdHlp_MainFrame.ItemFrame:SetPoint("LEFT", WrdHlp_MainFrame, "RIGHT", 5, 0)
 	end
 
 	first = nil
-	mOnWD_MainFrame.ItemFrame:Show()
-	mOnWD_MainFrame.ItemFrame.title:SetText(instance)
+	WrdHlp_MainFrame.ItemFrame:Show()
+	WrdHlp_MainFrame.ItemFrame.title:SetText(instance)
 	o.selection.itemList.instance = instance
-	mOnWD_MainFrame.ItemFrame.difficultyID = {}
-	UIDropDownMenu_Initialize(mOnWD_ItemFrame_DropDown, initDropdown)
-	UIDropDownMenu_SetWidth(mOnWD_ItemFrame_DropDown, 100)
-	UIDropDownMenu_SetButtonWidth(mOnWD_ItemFrame_DropDown, 124)
-	UIDropDownMenu_SetSelectedID(mOnWD_ItemFrame_DropDown, 1)
-	UIDropDownMenu_JustifyText(mOnWD_ItemFrame_DropDown, "LEFT")
+	WrdHlp_MainFrame.ItemFrame.difficultyID = {}
+	UIDropDownMenu_Initialize(WrdHlp_ItemFrame_DropDown, initDropdown)
+	UIDropDownMenu_SetWidth(WrdHlp_ItemFrame_DropDown, 100)
+	UIDropDownMenu_SetButtonWidth(WrdHlp_ItemFrame_DropDown, 124)
+	UIDropDownMenu_SetSelectedID(WrdHlp_ItemFrame_DropDown, 1)
+	UIDropDownMenu_JustifyText(WrdHlp_ItemFrame_DropDown, "LEFT")
 	o.setDifficulty(first)
 end
 
 o.GUIcurrentInstance = function()
 	local name, type, difficultyIndex, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, mapID = GetInstanceInfo()
-	mOnWD_MainFrame.ItemFrame:Hide()
+	WrdHlp_MainFrame.ItemFrame:Hide()
 	local namesToTry = o.createInstanceNames(name)
 
 	for i = 1,#namesToTry do
 		local name = namesToTry[i]
 		if o.instances[name] then
-			if mOnWDSave.onlyMiniList then
+			if WrdHlpSave.onlyMiniList then
 				local diff = '#first'
 				if o.instances[name]['difficulties'][difficultyName] then
 					diff = difficultyName
@@ -233,7 +233,7 @@ o.GUIcurrentInstance = function()
 				o.GUIshowItems(name)
 				if o.instances[name]['difficulties'][difficultyName] then
 					o.setDifficulty(difficultyName)
-					UIDropDownMenu_SetSelectedID(mOnWD_ItemFrame_DropDown, mOnWD_MainFrame.ItemFrame.difficultyID[difficultyName])
+					UIDropDownMenu_SetSelectedID(WrdHlp_ItemFrame_DropDown, WrdHlp_MainFrame.ItemFrame.difficultyID[difficultyName])
 				end
 			end
 			return
@@ -296,10 +296,10 @@ b:SetDisabledTexture("Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Disabled.bpl
 b:SetHighlightTexture("Interface\\Buttons\\UI-Common-MouseHilight.bpl","ADD");
 b:SetScript("OnClick", function()
 			ff:Hide()
-			mOnWD_MainFrame:Show()
+			WrdHlp_MainFrame:Show()
 	end);
 
-local b = CreateFrame("BUTTON","mOnWD_ItemFrame_bMiniList",ff,"UIPanelButtonTemplate")
+local b = CreateFrame("BUTTON","WrdHlp_ItemFrame_bMiniList",ff,"UIPanelButtonTemplate")
 ff.bMiniList = b
 b:SetParent(ff)
 b:SetHeight(25)
@@ -310,7 +310,7 @@ b:SetScript("OnClick", function()
 	o.GUIopenMiniList(1, o.selection.itemList.instance, o.selection.itemList.difficulty)
 end)
 
-local fd = CreateFrame("Button", "mOnWD_ItemFrame_DropDown", ff, "UIDropDownMenuTemplate")
+local fd = CreateFrame("Button", "WrdHlp_ItemFrame_DropDown", ff, "UIDropDownMenuTemplate")
 fd:ClearAllPoints()
 fd:SetPoint("TOPLEFT", ff, "TOPLEFT", 10, 5)
 fd:Show()
@@ -350,7 +350,7 @@ ff:SetScript("OnMouseWheel", function(self, delta)
 	scrollbar:SetValue(scrollbar:GetValue() - delta * 20)
 end)
 
-local b = CreateFrame("BUTTON","mOnWD_ItemFrame_bRefresh",ff,"UIPanelButtonTemplate");
+local b = CreateFrame("BUTTON","WrdHlp_ItemFrame_bRefresh",ff,"UIPanelButtonTemplate");
 ff.bRefresh = b;
 b:SetPoint("TOPRIGHT", ff, "TOPRIGHT", -35, 5)
 b:SetText(o.strings["Refresh Instance"])

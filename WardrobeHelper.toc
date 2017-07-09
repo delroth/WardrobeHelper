@@ -1,15 +1,14 @@
-## Interface:  70100
-## Title: mOnAr's WardrobeHelper
-## Version: 1.17
-## Author: Seamoon/mOnAr
+## Interface:  70200
+## Title: WardrobeHelper
+## Version: 1.18
+## Author: delroth (original: Seamoon/mOnAr)
 ## Notes:
-## SavedVariables: mOnWDSave
+## SavedVariables: WrdHlpSave
 ## SavedVariablesPerCharacter:
 
 libs\LibDBIcon-1.0\embeds.xml
 libs\LibDBIcon-1.0\LibDBIcon-1.0\lib.xml
 
-_GlobalOptions.lua
 Functions.lua
 
 Init.lua

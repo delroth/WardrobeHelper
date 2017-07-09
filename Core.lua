@@ -1,7 +1,7 @@
-local o = mOnWardrobe
+local o = WardrobeHelper
 
 ---------------------------------------------------------------
---  Default Settings (mOnWDSave)
+--  Default Settings (WrdHlpSave)
 ---------------------------------------------------------------
 
 o.defaultSettings = {}
@@ -23,7 +23,7 @@ o.defaultSettings.favoriteInstances = {}
 ---------------------------------------------------------------
 
 o.instances = {}
-o.version = GetAddOnMetadata("mOnArs_WardrobeHelper", "Version");
+o.version = GetAddOnMetadata("WardrobeHelper", "Version");
 
 local TYPES = {
 	'Boss drop', 'Quests', 'Vendor', 'World/Instance Drop', 'Achievements', 'Professions'
@@ -130,8 +130,8 @@ o.isBlacklisted = function(id)
 		if o.blacklist[i] == id then return true end
 	end
 
-	for i = 1,#mOnWDSave.blacklist do
-		if mOnWDSave.blacklist[i] == id then return true end
+	for i = 1,#WrdHlpSave.blacklist do
+		if WrdHlpSave.blacklist[i] == id then return true end
 	end
 
 	return false
@@ -148,14 +148,14 @@ local function getUpdateHelper()
 				for j = 1,#appearances do
 					local sources = C_TransmogCollection.GetAppearanceSources(appearances[j].visualID)
 					if sources then
-						local collected = (mOnWDSave.completionistMode == false) and (o.isCollected(sources) == true)
-						if collected and mOnWDSave.disableProgress then
+						local collected = (WrdHlpSave.completionistMode == false) and (o.isCollected(sources) == true)
+						if collected and WrdHlpSave.disableProgress then
 						else
 							for m = 1,#sources do
 								local i1, i2, b1, i3, b2, itemString, visualString, sourceType = C_TransmogCollection.GetAppearanceSourceInfo(sources[m].sourceID)
 								local itemID = tonumber(string.match(itemString, 'item:([^:]*):'))
-								collected = (mOnWDSave.completionistMode == false) and (o.isCollected(sources) == true)
-								collected = collected or (mOnWDSave.completionistMode and o.isCollected(sources, itemID))
+								collected = (WrdHlpSave.completionistMode == false) and (o.isCollected(sources) == true)
+								collected = collected or (WrdHlpSave.completionistMode and o.isCollected(sources, itemID))
 								if o.isBlacklisted(itemID) == false then
 									-- 1 = Boss Raid Drops
 									if sourceType == 1 then
@@ -253,8 +253,8 @@ local function getUpdateHelper()
 							local item = boss[i]
 							local sources = C_TransmogCollection.GetAppearanceSources(item.visualID)
 							if sources then
-								local collected = o.isCollected(sources) and (mOnWDSave.completionistMode == false)
-								collected = collected or (o.isCollected(sources, item.id) and mOnWDSave.completionistMode)
+								local collected = o.isCollected(sources) and (WrdHlpSave.completionistMode == false)
+								collected = collected or (o.isCollected(sources, item.id) and WrdHlpSave.completionistMode)
 								if collected then
 									newInstances[categoryName]["collected"] = newInstances[categoryName]["collected"] + 1
 									newInstances[categoryName]['difficulties'][difficultyName]["collected"] = newInstances[categoryName]['difficulties'][difficultyName]["collected"] + 1
@@ -262,7 +262,7 @@ local function getUpdateHelper()
 									table.insert(newInstances[categoryName]['difficulties'][difficultyName]["bosses"][bossName]['items'], item)
 								end
 
-								if category["#allSources"] and (collected == false or mOnWDSave.completionistMode) then
+								if category["#allSources"] and (collected == false or WrdHlpSave.completionistMode) then
 									for j = 1,#sources do
 										local i1, i2, b1, i3, b2, itemString, visualString, sourceType = C_TransmogCollection.GetAppearanceSourceInfo(sources[j].sourceID)
 										local id = tonumber(string.match(itemString, 'item:([^:]*):'))
@@ -348,7 +348,7 @@ o.refreshInstance = function(instance)
 					table.remove(items['items'], i)
 					o.instances[instance]['total'] = o.instances[instance]['total'] - 1
 					o.instances[instance]['difficulties'][difficulty]['total'] = o.instances[instance]['difficulties'][difficulty]['total'] - 1
-				elseif o.isCollected(sources, mOnWDSave.completionistMode and items['items'][i].id or nil) then
+				elseif o.isCollected(sources, WrdHlpSave.completionistMode and items['items'][i].id or nil) then
 					table.remove(items['items'], i)
 					o.instances[instance]['collected'] = o.instances[instance]['collected'] + 1
 					o.instances[instance]['difficulties'][difficulty]['collected'] = o.instances[instance]['difficulties'][difficulty]['collected'] + 1
@@ -362,15 +362,15 @@ end
 
 o.GUIopen = function()
 	o.GUImainPage(o.CURRENT_PAGE)
-	mOnWD_MainFrame.hideList:SetChecked(mOnWDSave.hideList)
-	mOnWD_MainFrame:Show()
+	WrdHlp_MainFrame.hideList:SetChecked(WrdHlpSave.hideList)
+	WrdHlp_MainFrame:Show()
 	o.GUIcurrentInstance()
 end
 
 o.fixSettings = function()
-	if mOnWDSave == nil then mOnWDSave = {} end
+	if WrdHlpSave == nil then WrdHlpSave = {} end
 	for k, v in pairs(o.defaultSettings) do
-		if mOnWDSave[k] == nil then mOnWDSave[k] = v end
+		if WrdHlpSave[k] == nil then WrdHlpSave[k] = v end
 	end
 end
 
@@ -492,26 +492,26 @@ o.updateSavedInstances = function()
 end
 
 o.reset = function()
-	mOnWD_MiniList:Hide()
-	mOnWD_MainFrame:Hide()
-	mOnWD_MainFrame.ItemFrame:Hide()
+	WrdHlp_MiniList:Hide()
+	WrdHlp_MainFrame:Hide()
+	WrdHlp_MainFrame.ItemFrame:Hide()
 	o.instances = {}
 	o.loaded = false
 	o.menuItems = {}
-	mOnWD_MainFrame.ListFrame.info:SetText(string.format(o.strings["Click Refresh Info"], o.strings["Refresh Items"]))
+	WrdHlp_MainFrame.ListFrame.info:SetText(string.format(o.strings["Click Refresh Info"], o.strings["Refresh Items"]))
 end
 
 ---------------------------------------------------------------
 --  Slash Commands
 ---------------------------------------------------------------
 
-SLASH_MONWARDROBE1 = '/mwd';
+SLASH_WARDROBEHELPER = '/wrh';
 
 local function handler(msg, editbox)
 	o.GUIopen()
 end
 
-SlashCmdList["MONWARDROBE"] = handler;
+SlashCmdList["WARDROBEHELPER"] = handler;
 
 ---------------------------------------------------------------
 --  Events
@@ -526,9 +526,9 @@ f:RegisterEvent("PLAYER_ENTERING_WORLD")
 local init = true
 
 function f:OnEvent(event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, arg16, arg17, arg18, arg19, arg20, arg21, arg22, arg23)
-	if (event == "ADDON_LOADED") and (arg1 == "mOnArs_WardrobeHelper") then
+	if (event == "ADDON_LOADED") and (arg1 == "WardrobeHelper") then
 		o.fixSettings()
-		o.LDBI:Register("Wardrobe Helper", o.LDB, mOnWDSave.minimap)
+		o.LDBI:Register("Wardrobe Helper", o.LDB, WrdHlpSave.minimap)
 	end
 
 	if (event == "TRANSMOG_COLLECTION_UPDATED") then
@@ -560,8 +560,8 @@ function f:OnEvent(event, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, 
 			o.GUIopenMiniList(nil, nil, nil, true)
 		end
 
-		if(mOnWD_OptionsFrame) then
-			o.GUIblacklistPage(mOnWD_OptionsFrame.blacklist.N)
+		if(WrdHlp_OptionsFrame) then
+			o.GUIblacklistPage(WrdHlp_OptionsFrame.blacklist.N)
 		end
 	end
 end
@@ -569,8 +569,8 @@ end
 function f:OnUpdate(arg1)
 	if WardrobeCollectionFrame then
 		if WardrobeCollectionFrame.NavigationFrame then
-			if mOnWD_MainFrame_bShow == nil then
-				local b = CreateFrame("BUTTON","mOnWD_MainFrame_bShow",WardrobeCollectionFrame.NavigationFrame,"UIPanelButtonTemplate");
+			if WrdHlp_MainFrame_bShow == nil then
+				local b = CreateFrame("BUTTON","WrdHlp_MainFrame_bShow",WardrobeCollectionFrame.NavigationFrame,"UIPanelButtonTemplate");
 				b:SetPoint("BOTTOMLEFT",25,25);
 				b:SetText("Wardrobe Helper")
 				b:SetHeight(25);
@@ -584,7 +584,7 @@ function f:OnUpdate(arg1)
 
 
 	if o.updateHelper and coroutine.status(o.updateHelper) ~= "dead" then
-		mOnWD_MainFrame.ListFrame.info:SetText(o.strings["Refreshing"] .. o.dotsString)
+		WrdHlp_MainFrame.ListFrame.info:SetText(o.strings["Refreshing"] .. o.dotsString)
 		local ok, msg = coroutine.resume(o.updateHelper)
 		if not ok then
 			print("Error while refreshing: ", msg)
@@ -593,9 +593,9 @@ function f:OnUpdate(arg1)
 
 	if init then
 		init = false
-		mOnWD_MiniList:SetScale(mOnWDSave.miniListScale)
-		mOnWD_MiniList:SetRowCount(mOnWDSave.miniListRowCount)
-		if(mOnWDSave.reloadOnStart) then
+		WrdHlp_MiniList:SetScale(WrdHlpSave.miniListScale)
+		WrdHlp_MiniList:SetRowCount(WrdHlpSave.miniListRowCount)
+		if(WrdHlpSave.reloadOnStart) then
 			o.updateMissingVisuals()
 		end
 	end

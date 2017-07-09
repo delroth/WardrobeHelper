@@ -1,4 +1,4 @@
-local o = mOnWardrobe
+local o = WardrobeHelper
 if o.customCategories == nil then o.customCategories = {} end
 local c = o.customCategories
 
