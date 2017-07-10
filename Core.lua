@@ -174,6 +174,8 @@ local function getUpdateHelper()
 	return coroutine.create(function()
 		local newInstances = {}
 		local sourcesQueue = newQueue()
+		local priorityQueue = newQueue()
+		local nextPriorityQueue = newQueue()
 		local enqueueBlockSize = 1000 -- number of sources to queue at once.
 		local scanBlockSize = 50 -- number of sources to attempt to load at once.
 		local counter = 0
@@ -202,13 +204,24 @@ local function getUpdateHelper()
 		end
 		
 		counter = 0
-		while not queueIsEmpty(sourcesQueue) do
-			local sourceToScan = dequeue(sourcesQueue)
+		while not queueIsEmpty(sourcesQueue) or not queueIsEmpty(priorityQueue) do
+			local sourceToScan
+			if queueIsEmpty(priorityQueue) then
+				sourceToScan = dequeue(sourcesQueue)
+			else
+				sourceToScan = dequeue(priorityQueue)
+			end
+			
 			local i1, i2, b1, i3, b2, itemString, visualString, sourceType = C_TransmogCollection.GetAppearanceSourceInfo(sourceToScan.sourceID)
 			if visualString == nil or visualString == '' then
 				-- "Retrieving item information". Retry later.
 				sourceToScan.retryCount = sourceToScan.retryCount + 1
-				enqueue(sourcesQueue, sourceToScan)
+				if sourceToScan.retryCount < 20 then
+					enqueue(nextPriorityQueue, sourceToScan)
+				else
+					sourceToScan.retryCount = 0
+					enqueue(sourcesQueue, sourceToScan)
+				end
 			else
 				local itemID = tonumber(string.match(itemString, 'item:([^:]*):'))
 				local itemDifficulty = tonumber(string.match(itemString, 'item:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:[^:]*:([^:]*):'))
@@ -284,6 +297,8 @@ local function getUpdateHelper()
 			end
 			counter = counter + 1
 			if counter % scanBlockSize == 0 then
+				priorityQueue = newQueue()
+				while not queueIsEmpty(nextPriorityQueue) do enqueue(priorityQueue, dequeue(nextPriorityQueue)) end
 				o.dotsString = o.dotsString .. "."
 				if o.dotsString == "...." then o.dotsString = "" end
 				coroutine.yield()
