@@ -6,6 +6,34 @@ local a = o.additionalData
 -- LinkDifficulties: LFR, N - default, H, M
 
 ---------------------------------------------------------------
+--  Legion - Raids
+---------------------------------------------------------------
+
+a["The Emerald Nightmare"] = {}
+a["The Emerald Nightmare"]["LFR"] = {items = {Trash = {140993, 140996, 141694, 141695}}, linkDifficulty = "LFR"}
+a["The Emerald Nightmare"]["N"] = {items = {Trash = {140993, 140996, 141694, 141695}}}
+a["The Emerald Nightmare"]["H"] = {items = {Trash = {140993, 140996, 141694, 141695}}, linkDifficulty = "H"}
+a["The Emerald Nightmare"]["M"] = {items = {Trash = {140993, 140996, 141694, 141695}}, linkDifficulty = "M"}
+
+a["Trial of Valor"] = {}
+a["Trial of Valor"]["LFR"] = {items = {Trash = {142541}}, linkDifficulty = "LFR"}
+a["Trial of Valor"]["N"] = {items = {Trash = {142541}}}
+a["Trial of Valor"]["H"] = {items = {Trash = {142541}}, linkDifficulty = "H"}
+a["Trial of Valor"]["M"] = {items = {Trash = {142541}}, linkDifficulty = "M"}
+
+a["The Nighthold"] = {}
+a["The Nighthold"]["LFR"] = {items = {Trash = {144399, 144400, 144401, 144403, 144404, 144405, 144406, 144407}}, linkDifficulty = "LFR"}
+a["The Nighthold"]["N"] = {items = {Trash = {144399, 144400, 144401, 144403, 144404, 144405, 144406, 144407}}}
+a["The Nighthold"]["H"] = {items = {Trash = {144399, 144400, 144401, 144403, 144404, 144405, 144406, 144407}}, linkDifficulty = "H"}
+a["The Nighthold"]["M"] = {items = {Trash = {144399, 144400, 144401, 144403, 144404, 144405, 144406, 144407}}, linkDifficulty = "M"}
+
+a["Tomb of Sargeras"] = {}
+a["Tomb of Sargeras"]["LFR"] = {items = {Trash = {146989, 147038, 147044, 147064, 147422, 147423, 147424, 147425, 147426, 147427, 147428, 147429}}, linkDifficulty = "LFR"}
+a["Tomb of Sargeras"]["N"] = {items = {Trash = {146989, 147038, 147044, 147064, 147422, 147423, 147424, 147425, 147426, 147427, 147428, 147429}}}
+a["Tomb of Sargeras"]["H"] = {items = {Trash = {146989, 147038, 147044, 147064, 147422, 147423, 147424, 147425, 147426, 147427, 147428, 147429}}, linkDifficulty = "H"}
+a["Tomb of Sargeras"]["M"] = {items = {Trash = {146989, 147038, 147044, 147064, 147422, 147423, 147424, 147425, 147426, 147427, 147428, 147429}}, linkDifficulty = "M"}
+
+---------------------------------------------------------------
 --  WoD - Raids
 ---------------------------------------------------------------
 
