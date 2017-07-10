@@ -62,9 +62,9 @@ o.addAdditionalData = function(instances, useCoroutine)
                   if o.isBlacklisted(itemID) == false then
                     if instances[instanceName] == nil then
                       instances[instanceName] = {}
-  										instances[instanceName]['collected'] = 0
-  										instances[instanceName]['total'] = 0
-  										instances[instanceName]['difficulties'] = {}
+  					  instances[instanceName]['difficulties'] = {}
+					  instances[instanceName]['allVisuals'] = {}
+					  instances[instanceName]['collectedVisuals'] = {}
                     end
 
                     local diffs = o.difficulties[diff]
@@ -76,27 +76,27 @@ o.addAdditionalData = function(instances, useCoroutine)
 
                     if instances[instanceName]['difficulties'][foundDiff] == nil then
                       instances[instanceName]['difficulties'][foundDiff] = {}
-  										instances[instanceName]['difficulties'][foundDiff]['collected'] = 0
-  										instances[instanceName]['difficulties'][foundDiff]['total'] = 0
-  										instances[instanceName]['difficulties'][foundDiff]['bosses'] = {}
+  					  instances[instanceName]['difficulties'][foundDiff]['collectedVisuals'] = {}
+  					  instances[instanceName]['difficulties'][foundDiff]['allVisuals'] = {}
+  					  instances[instanceName]['difficulties'][foundDiff]['bosses'] = {}
                     end
 
                     if instances[instanceName]['difficulties'][foundDiff]['bosses'][source] == nil then
-  										instances[instanceName]['difficulties'][foundDiff]['bosses'][source] = {}
-  										instances[instanceName]['difficulties'][foundDiff]['bosses'][source]['items'] = {}
-  									end
+  					  instances[instanceName]['difficulties'][foundDiff]['bosses'][source] = {}
+  					  instances[instanceName]['difficulties'][foundDiff]['bosses'][source]['items'] = {}
+  					end
 
                     if collected then
-  										instances[instanceName]['collected'] = instances[instanceName]['collected'] + 1
-  										instances[instanceName]['difficulties'][foundDiff]['collected'] = instances[instanceName]['difficulties'][foundDiff]['collected'] + 1
-  									else
-  										table.insert(instances[instanceName]['difficulties'][foundDiff]['bosses'][source]['items'], {
-  											link = itemLink, id = itemID, visualID = appearanceID,	sourceID = sources[1].sourceID
-  										})
-  									end
-  									instances[instanceName]['total'] = instances[instanceName]['total'] + 1
-  									instances[instanceName]['difficulties'][foundDiff]['total'] = instances[instanceName]['difficulties'][foundDiff]['total'] + 1
-                  end
+					  instances[instanceName]['collectedVisuals'][appearanceID] = true
+					  instances[instanceName]['difficulties'][foundDiff]['collectedVisuals'][appearanceID] = true
+					else
+						table.insert(instances[instanceName]['difficulties'][foundDiff]['bosses'][source]['items'], {
+							link = itemLink, id = itemID, visualID = appearanceID,	sourceID = sources[1].sourceID, collected = collected
+						})
+					end
+					instances[instanceName]['allVisuals'][appearanceID] = true
+					instances[instanceName]['difficulties'][foundDiff]['allVisuals'][appearanceID] = true
+				  end
                 end
               end
             end

@@ -170,6 +170,12 @@ local function queueIsEmpty(queue)
 	return queue.first > queue.last
 end
 
+local function countTableKeys(t)
+	local count = 0
+	for _ in pairs(t) do count = count + 1 end
+	return count
+end
+
 local function getUpdateHelper()
 	return coroutine.create(function()
 		local newInstances = {}
@@ -235,9 +241,9 @@ local function getUpdateHelper()
 							local inst = drops[k]
 							if newInstances[inst.instance] == nil then
 								newInstances[inst.instance] = {}
-								newInstances[inst.instance]['collected'] = 0
-								newInstances[inst.instance]['total'] = 0
 								newInstances[inst.instance]['difficulties'] = {}
+								newInstances[inst.instance]['allVisuals'] = {}
+								newInstances[inst.instance]['collectedVisuals'] = {}
 							end
 							if #inst.difficulties == 0 then
 								if itemDifficulty == nil or o.instanceDifficulties[itemDifficulty] == nil then
@@ -250,8 +256,8 @@ local function getUpdateHelper()
 								local dif = inst.difficulties[l]
 								if newInstances[inst.instance]['difficulties'][dif] == nil then
 									newInstances[inst.instance]['difficulties'][dif] = {}
-									newInstances[inst.instance]['difficulties'][dif]['collected'] = 0
-									newInstances[inst.instance]['difficulties'][dif]['total'] = 0
+									newInstances[inst.instance]['difficulties'][dif]['collectedVisuals'] = {}
+									newInstances[inst.instance]['difficulties'][dif]['allVisuals'] = {}
 									newInstances[inst.instance]['difficulties'][dif]['bosses'] = {}
 								end
 								if newInstances[inst.instance]['difficulties'][dif]['bosses'][inst.encounter] == nil then
@@ -259,15 +265,15 @@ local function getUpdateHelper()
 									newInstances[inst.instance]['difficulties'][dif]['bosses'][inst.encounter]['items'] = {}
 								end
 								if collected then
-									newInstances[inst.instance]['collected'] = newInstances[inst.instance]['collected'] + 1
-									newInstances[inst.instance]['difficulties'][dif]['collected'] = newInstances[inst.instance]['difficulties'][dif]['collected'] + 1
+									newInstances[inst.instance]['collectedVisuals'][sourceToScan.visualID] = true
+									newInstances[inst.instance]['difficulties'][dif]['collectedVisuals'][sourceToScan.visualID] = true
 								else
 									table.insert(newInstances[inst.instance]['difficulties'][dif]['bosses'][inst.encounter]['items'], {
 										link = itemString, id = itemID, visualID = sourceToScan.visualID, sourceID = sourceToScan.sourceID
 									})
 								end
-								newInstances[inst.instance]['total'] = newInstances[inst.instance]['total'] + 1
-								newInstances[inst.instance]['difficulties'][dif]['total'] = newInstances[inst.instance]['difficulties'][dif]['total'] + 1
+								newInstances[inst.instance]['allVisuals'][sourceToScan.visualID] = true
+								newInstances[inst.instance]['difficulties'][dif]['allVisuals'][sourceToScan.visualID] = true
 							end
 						end
 					else
@@ -277,21 +283,21 @@ local function getUpdateHelper()
 							newInstances[type]['difficulties'] = {}
 							newInstances[type]['difficulties']['Normal'] = {}
 							newInstances[type]['difficulties']['Normal']['bosses'] = {}
-							newInstances[type]['collected'] = 0
-							newInstances[type]['total'] = 0
+							newInstances[type]['collectedVisuals'] = {}
+							newInstances[type]['allVisuals'] = {}
 						end
 						if newInstances[type]['difficulties']['Normal']['bosses'][sourceToScan.category] == nil then
 							newInstances[type]['difficulties']['Normal']['bosses'][sourceToScan.category] = {}
 							newInstances[type]['difficulties']['Normal']['bosses'][sourceToScan.category]['items'] = {}
 						end
 						if collected then
-							newInstances[type]['collected'] = newInstances[type]['collected'] + 1
+							newInstances[type]['collectedVisuals'][sourceToScan.visualID] = true
 						else
 							table.insert(newInstances[type]['difficulties']['Normal']['bosses'][sourceToScan.category]['items'], {
 								link = itemString, id = itemID, visualID = sourceToScan.visualID, sourceID = sourceToScan.sourceID
 							})
 						end
-						newInstances[type]['total'] = newInstances[type]['total'] + 1
+						newInstances[type]['allVisuals'][sourceToScan.visualID] = true
 					end
 				end
 			end
@@ -309,15 +315,15 @@ local function getUpdateHelper()
 		for categoryName, category in pairs(o.customCategories) do
 			newInstances[categoryName] = {}
 			newInstances[categoryName]['difficulties'] = {}
-			newInstances[categoryName]["total"] = 0
-			newInstances[categoryName]["collected"] = 0
+			newInstances[categoryName]['allVisuals'] = {}
+			newInstances[categoryName]['collectedVisuals'] = {}
 			table.insert(o.tiers['Custom Categories']['Other'], categoryName)
 
 			for difficultyName, difficulty in pairs(category) do
 				if string.sub(difficultyName, 1, 1) ~= '#' then
 					newInstances[categoryName]['difficulties'][difficultyName] = {}
-					newInstances[categoryName]['difficulties'][difficultyName]["total"] = 0
-					newInstances[categoryName]['difficulties'][difficultyName]["collected"] = 0
+					newInstances[categoryName]['difficulties'][difficultyName]["allVisuals"] = {}
+					newInstances[categoryName]['difficulties'][difficultyName]["collectedVisuals"] = {}
 					newInstances[categoryName]['difficulties'][difficultyName]["bosses"] = {}
 					for bossName, boss in pairs(difficulty) do
 						newInstances[categoryName]['difficulties'][difficultyName]["bosses"][bossName] = {}
@@ -329,8 +335,8 @@ local function getUpdateHelper()
 								local collected = o.isCollected(sources) and (WrdHlpSave.completionistMode == false)
 								collected = collected or (o.isCollected(sources, item.id) and WrdHlpSave.completionistMode)
 								if collected then
-									newInstances[categoryName]["collected"] = newInstances[categoryName]["collected"] + 1
-									newInstances[categoryName]['difficulties'][difficultyName]["collected"] = newInstances[categoryName]['difficulties'][difficultyName]["collected"] + 1
+									newInstances[categoryName]["collectedVisuals"][item.visualID] = true
+									newInstances[categoryName]['difficulties'][difficultyName]["collectedVisuals"][item.visualID] = true
 								else
 									table.insert(newInstances[categoryName]['difficulties'][difficultyName]["bosses"][bossName]['items'], item)
 								end
@@ -362,13 +368,13 @@ local function getUpdateHelper()
 									end
 								end
 
-								newInstances[categoryName]["total"] = newInstances[categoryName]["total"] + 1
-								newInstances[categoryName]['difficulties'][difficultyName]["total"] = newInstances[categoryName]['difficulties'][difficultyName]["total"] + 1
+								newInstances[categoryName]["allVisuals"][item.visualID] = true
+								newInstances[categoryName]['difficulties'][difficultyName]["allVisuals"][item.visualID] = true
 							else
 								if category['#alwaysShow'] then
 									table.insert(newInstances[categoryName]['difficulties'][difficultyName]["bosses"][bossName]['items'], item)
-									newInstances[categoryName]["total"] = newInstances[categoryName]["total"] + 1
-									newInstances[categoryName]['difficulties'][difficultyName]["total"] = newInstances[categoryName]['difficulties'][difficultyName]["total"] + 1
+									newInstances[categoryName]["allVisuals"][item.visualID] = true
+									newInstances[categoryName]['difficulties'][difficultyName]["allVisuals"][item.visualID] = true
 								end
 							end
 
@@ -385,6 +391,18 @@ local function getUpdateHelper()
 		end
 
 		o.addAdditionalData(newInstances, true)
+		
+		-- Compute total/collected at each level.
+		for name, instance in pairs(newInstances) do
+			instance['total'] = countTableKeys(instance['allVisuals'])
+			instance['collected'] = countTableKeys(instance['collectedVisuals'])
+			if instance['difficulties'] then
+				for diff, difficulty in pairs(instance['difficulties']) do
+					if difficulty['allVisuals'] then difficulty['total'] = countTableKeys(difficulty['allVisuals']) end
+					if difficulty['collectedVisuals'] then difficulty['collected'] = countTableKeys(difficulty['collectedVisuals']) end
+				end
+			end
+		end
 
 		o.instances = newInstances
 		o.loaded = true
@@ -416,15 +434,16 @@ o.refreshInstance = function(instance)
 	for difficulty, bosses in pairs(o.instances[instance]['difficulties']) do
 		for boss, items in pairs(bosses['bosses']) do
 			for i=#items['items'],1,-1 do
-				local sources = C_TransmogCollection.GetAppearanceSources(items['items'][i].visualID)
-				if o.isBlacklisted(items['items'][i].id) then
+				local item = items['items'][i]
+				local sources = C_TransmogCollection.GetAppearanceSources(item.visualID)
+				if o.isBlacklisted(item.id) then
 					table.remove(items['items'], i)
-					o.instances[instance]['total'] = o.instances[instance]['total'] - 1
-					o.instances[instance]['difficulties'][difficulty]['total'] = o.instances[instance]['difficulties'][difficulty]['total'] - 1
-				elseif o.isCollected(sources, WrdHlpSave.completionistMode and items['items'][i].id or nil) then
+					o.instances[instance]['allVisuals'][item.visualID] = nil
+					o.instances[instance]['difficulties'][difficulty]['allVisuals'][item.visualID] = nil
+				elseif o.isCollected(sources, WrdHlpSave.completionistMode and item.id or nil) then
 					table.remove(items['items'], i)
-					o.instances[instance]['collected'] = o.instances[instance]['collected'] + 1
-					o.instances[instance]['difficulties'][difficulty]['collected'] = o.instances[instance]['difficulties'][difficulty]['collected'] + 1
+					o.instances[instance]['collectedVisuals'][item.visualID] = true
+					o.instances[instance]['difficulties'][difficulty]['collectedVisuals'][item.visualID] = true
 				end
 			end
 		end
